@@ -17,10 +17,10 @@ import org.opt4j.viewer.ViewerModule
  * creator - for heuristic learning from scratch randoming the weights will be fine, starting from pre-backpropagated
  *   weights will be more tricky because of the module-based architecture
  * phenotype - that could actually be a neural network with weights from the genotype
- * decoder - it will construct the nwtork using given weights
+ * decoder - it will construct the network using given weights
  * evaluator - it will, guess what, evaluate the phenotype (network)
  * objective - I'm thinking single numerical objective, error or f-score or something like that
- *   minimized or maximized dependign on what value we use
+ *   minimized or maximized depending on what value we use
  *
  * PSO and EA are already implemented in opt4j, we can modify mutProb, crossProb etc, it seems good enough
  *
@@ -37,6 +37,15 @@ import org.opt4j.viewer.ViewerModule
  *
  * I'll mark lines in which you can choose whether to use EA or PSO, just (un)comment the correct line
  * We've also got that awesome viewer, it will provide some tasty graphs for presentations and that god-forsaken paper
+ *
+ *
+ * OK, a brand new idea for starting with some pre-learned weights - obviously we're not going to initialize each and
+ * every specimen with the same genotype, that would make no sense. So we're gonna need some List<Double> of starting
+ * weights in the Creator class, vary them up a little in the create() method and get a population of slightly
+ * different 'networks'. The thing is we're not constructing the Creator object ourselves, so that list
+ * would have to be in the class itself. Thankfully, we've got a meta-programming guy in our midst,
+ * so it should be perfectly doable to create a class with given class-level list on demand and then
+ * using it in the optimization process.
  */
 
 class RastriginCreator implements Creator<DoubleGenotype> {
