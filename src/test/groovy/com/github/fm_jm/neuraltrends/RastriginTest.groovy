@@ -113,7 +113,7 @@ class RastriginTest extends GroovyTestCase {
     void doTest(Module heuristic){
         trubadur.info("Testing heuristic $heuristic")
         RastriginModule rastr = new RastriginModule()
-        //todo: do we need viewer at all?
+        //viewer will be used while creating report, screw that in test
 //        ViewerModule viewer = new ViewerModule();
 //        viewer.setCloseOnStop ( false );
         Opt4JTask task = new Opt4JTask(false);
