@@ -49,6 +49,18 @@ for(MLDataPair pair: trainingSet ) {
     println "in: ${ThresholdCategory.threshold(pair.inputArray)}, expected: ${ThresholdCategory.threshold(pair.idealArray)}, is: ${ThresholdCategory.threshold(output.data)}"
 }
 
+println network.flat.getWeights()
+def newWeights = network.flat.getWeights().toList()
+newWeights[0] *= 3
+network.flat.setWeights((double[])newWeights.toArray())
+println network.flat.getWeights()
+
+System.out.println("Neural Network Results after weight modification:");
+for(MLDataPair pair: trainingSet ) {
+    final MLData output = network.compute(pair.getInput());
+    println "in: ${ThresholdCategory.threshold(pair.inputArray)}, expected: ${ThresholdCategory.threshold(pair.idealArray)}, is: ${ThresholdCategory.threshold(output.data)}"
+}
+
 Encog.getInstance().shutdown();
 
 /*
