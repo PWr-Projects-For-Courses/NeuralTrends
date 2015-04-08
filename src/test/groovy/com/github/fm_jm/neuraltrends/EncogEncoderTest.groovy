@@ -12,7 +12,7 @@ import groovy.util.logging.Slf4j
 
 @Slf4j("bard")
 class EncogEncoderTest extends GroovyTestCase{
-    double[][] data = [
+    static int[][] data = [
         [1, 1, 1, 0, 0, 0],
         [0, 1, 1, 0, 0, 0],
         [1, 0, 1, 0, 0, 0],
@@ -22,7 +22,7 @@ class EncogEncoderTest extends GroovyTestCase{
         [1, 1, 1, 0, 0, 1]
     ]
 
-    BasicNetwork getTrainedNetwork(int epochs){
+    static BasicNetwork getTrainedNetwork(int epochs){
         BasicNetwork network = new BasicNetwork();
         def input = new BasicLayer(null,false,6)
         def hidden = new BasicLayer(new ActivationSigmoid(),true,10)
@@ -33,7 +33,7 @@ class EncogEncoderTest extends GroovyTestCase{
         network.getStructure().finalizeStructure();
         network.reset();
 
-        MLDataSet trainingSet = new BasicMLDataSet(data, data);
+        MLDataSet trainingSet = new BasicMLDataSet(data as double[][], data as double[][]);
 
         ResilientPropagation train = new ResilientPropagation(network, trainingSet);
 
@@ -53,8 +53,8 @@ class EncogEncoderTest extends GroovyTestCase{
     void testEncoder(){
         def network = getTrainedNetwork(20)
         use(BasicNetworkCategory){
-            data.each { double[] pattern ->
-                bard.info "Should be: ${pattern.threshold()}, was ${network.activate(pattern)}"
+            data.each { int[] pattern ->
+                bard.info "Should be: ${pattern}, was ${network.activate(pattern)}"
             }
         }
     }
