@@ -1,9 +1,7 @@
-plugins {
-    id 'java'
-    id 'groovy'
-    id 'idea'
-    id 'maven'
-}
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -32,5 +30,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper){
-    gradleVersion = '2.3'
+    gradleVersion = '1.12'
 }
