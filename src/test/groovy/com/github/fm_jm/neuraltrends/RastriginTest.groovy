@@ -1,3 +1,6 @@
+package com.github.fm_jm.neuraltrends
+
+import com.google.inject.Module
 import org.opt4j.core.Individual
 import org.opt4j.core.Objective
 import org.opt4j.core.Objectives
@@ -10,7 +13,8 @@ import org.opt4j.core.problem.ProblemModule
 import org.opt4j.core.start.Opt4JTask
 import org.opt4j.optimizers.ea.EvolutionaryAlgorithmModule
 import org.opt4j.optimizers.mopso.MOPSOModule
-import org.opt4j.viewer.ViewerModule
+
+import groovy.util.logging.Slf4j
 
 /**
  * genotype - we'll use the DoubleGenotype, it's basically List<Double>, perfect for us
@@ -47,82 +51,86 @@ import org.opt4j.viewer.ViewerModule
  * so it should be perfectly doable to create a class with given class-level list on demand and then
  * using it in the optimization process.
  */
+@Slf4j("trubadur")
+class RastriginTest extends GroovyTestCase {
+    static class RastriginCreator implements Creator<DoubleGenotype> {
 
-class RastriginCreator implements Creator<DoubleGenotype> {
+        Random random = new Random()
 
-    Random random = new Random()
-    @Override
-    DoubleGenotype create() {
-        DoubleGenotype genotype = new DoubleGenotype(-5.12, 5.12)
-        genotype.init(random, 2)
-        return genotype
+        @Override
+        DoubleGenotype create() {
+            DoubleGenotype genotype = new DoubleGenotype(-5.12, 5.12)
+            genotype.init(random, 2)
+            return genotype
+        }
+    }
+
+    static class RastriginDecoder implements Decoder<DoubleGenotype, Double> {
+
+        @Override
+        Double decode(DoubleGenotype genotype) {
+            double x = genotype.get(0)
+            double y = genotype.get(1)
+            return 20 + x * x - 10 * Math.cos(2 * Math.PI * x) + y * y - 10 * Math.cos(2 * Math.PI * y)
+        }
+    }
+
+    static class RastriginEvaluator implements Evaluator<Double> {
+
+        @Override
+        Objectives evaluate(Double phenotype) {
+            Objectives objectives = new Objectives()
+            objectives.add('objective', Objective.Sign.MIN, phenotype.doubleValue())
+            return objectives
+        }
+    }
+
+
+    static class RastriginModule extends ProblemModule {
+
+        @Override
+        protected void config() {
+            bindProblem(RastriginCreator.class, RastriginDecoder.class, RastriginEvaluator.class)
+        }
+    }
+
+    void testEa(){
+        EvolutionaryAlgorithmModule ea = new EvolutionaryAlgorithmModule()
+        ea.generations = 100
+        ea.alpha = 50
+        doTest(ea)
+    }
+
+    void testPso(){
+        MOPSOModule pso = new MOPSOModule()
+        pso.iterations = 100
+        pso.particles = 50
+        doTest(pso)
+    }
+
+
+
+    void doTest(Module heuristic){
+        trubadur.info("Testing heuristic $heuristic")
+        RastriginModule rastr = new RastriginModule()
+        //todo: do we need viewer at all?
+//        ViewerModule viewer = new ViewerModule();
+//        viewer.setCloseOnStop ( false );
+        Opt4JTask task = new Opt4JTask(false);
+
+        task.init(heuristic, rastr)
+//        task.init(heuristic, rastr, viewer)
+
+        try {
+            task.execute();  // <- whole optimization happens here
+            Archive archive = task.getInstance(Archive.class);    // in archive we've got the best specimen
+            for (Individual individual : archive) {
+                trubadur.info "${individual.objectives.values}"
+                trubadur.info "${individual.genotype}"
+                trubadur.info "${individual.phenotype}"
+            }
+        } finally {
+            task.close();
+        }
     }
 }
-
-class RastriginDecoder implements Decoder<DoubleGenotype, Double>{
-
-    @Override
-    Double decode(DoubleGenotype genotype) {
-        double x = genotype.get(0)
-        double y = genotype.get(1)
-        return 20 + x*x - 10*Math.cos(2*Math.PI*x) + y*y - 10*Math.cos(2*Math.PI*y)
-    }
-}
-
-class RastriginEvaluator implements Evaluator<Double>{
-
-    @Override
-    Objectives evaluate(Double phenotype) {
-        Objectives objectives = new Objectives()
-        objectives.add('objective', Objective.Sign.MIN, phenotype.doubleValue())
-        return objectives
-    }
-}
-
-
-class RastriginModule extends ProblemModule{
-
-    @Override
-    protected void config() {
-        bindProblem(RastriginCreator.class, RastriginDecoder.class, RastriginEvaluator.class)
-    }
-}
-
-
-
-EvolutionaryAlgorithmModule ea = new EvolutionaryAlgorithmModule()
-ea.generations = 100
-ea.alpha = 50
-
-MOPSOModule pso = new MOPSOModule()
-pso.iterations = 100
-pso.particles = 50
-
-
-
-RastriginModule rastr = new RastriginModule()
-ViewerModule viewer = new ViewerModule();
-viewer.setCloseOnStop(false);
-Opt4JTask task = new Opt4JTask(false);
-
-/**
- * below be choosing point, young parawan, it is, mhm
- */
-//task.init(ea,rastr, viewer)
-task.init(pso, rastr, viewer)
-
-try {
-    task.execute();  // <- whole optimization happens here
-    Archive archive = task.getInstance(Archive.class);    // in archive we've got the best specimen
-    for (Individual individual : archive) {
-        println individual.objectives.values
-        println individual.genotype
-        println individual.phenotype
-        println()
-    }
-} catch (Exception e) {
-    e.printStackTrace();
-} finally {
-    task.close();
-}
-
