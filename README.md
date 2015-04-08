@@ -17,3 +17,8 @@ Autorzy
 
 * Jacek Miszczak (179158)
 * Filip Malczak (179326)
+
+TODO
+-----
+
+* Sprawdzić jak można okreslić ile neuronów w warstwie/sieci się zapala
