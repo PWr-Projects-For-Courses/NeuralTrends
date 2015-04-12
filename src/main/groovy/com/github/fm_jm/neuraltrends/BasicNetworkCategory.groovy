@@ -12,9 +12,24 @@ class BasicNetworkCategory {
         threshold(network.compute(new BasicMLData(input)).data)
     }
 
+    /**
+     * IMPORTANT: for this to work it needs to be called right after activating the network
+     * @param network Freshly activated network
+     * @param layer Layer number
+     * @return Activation density of given layer
+     */
+    static double activationDensity(BasicNetwork network, int layer){
+        int activated = 0
+        network.getLayerNeuronCount(layer).times {
+            activated += network.getLayerOutput(layer,it) >= 0.5 ? 1 : 0
+        }
+        return activated/network.getLayerNeuronCount(layer)
+    }
+
     static int[] threshold(double[] data){
         (int[]) data.collect { it>=0.5 ? 1 : 0 }.toArray()
     }
+
 
     /**
      * Assumes non-recursive network with connections up only

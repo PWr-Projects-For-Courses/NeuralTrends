@@ -55,6 +55,9 @@ class EncogEncoderTest extends GroovyTestCase{
         use(BasicNetworkCategory){
             data.each { int[] pattern ->
                 bard.info "Should be: ${pattern}, was ${network.activate(pattern)}"
+                3.times {
+                    bard.info "Layer ${it} activation density is ${network.activationDensity(it)}"
+                }
             }
         }
     }
