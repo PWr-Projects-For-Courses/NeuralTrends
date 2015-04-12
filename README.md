@@ -21,4 +21,6 @@ Autorzy
 TODO
 -----
 
-* Sprawdzić jak można okreslić ile neuronów w warstwie/sieci się zapala
+* Regularyzacja. W EncogEncoderTest masz zakomentowaną linię z przykłądem, jak użyć strategii przy uczeniu.
+  Stamtąd łatwo dojdziesz do interfejsu strategii. O samej regularyzacji:
+   http://www.cedar.buffalo.edu/~srihari/CSE574/Chap5/Chap5.5-Regularization.pdf 

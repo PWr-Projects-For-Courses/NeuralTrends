@@ -9,6 +9,7 @@ import org.encog.neural.networks.layers.BasicLayer
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation
 
 import groovy.util.logging.Slf4j
+import org.encog.neural.networks.training.strategy.RegularizationStrategy
 
 @Slf4j("bard")
 class EncogEncoderTest extends GroovyTestCase{
@@ -36,6 +37,7 @@ class EncogEncoderTest extends GroovyTestCase{
         MLDataSet trainingSet = new BasicMLDataSet(data as double[][], data as double[][]);
 
         ResilientPropagation train = new ResilientPropagation(network, trainingSet);
+//        train.addStrategy(new RegularizationStrategy(0.3))
 
         epochs.times {
             train.iteration();
