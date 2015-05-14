@@ -27,11 +27,10 @@ class WeightsEvaluator implements Evaluator<BasicNetwork> {
             if (layerCount>2)
                 sparisty += BasicNetworkCategory.activationDensity(phenotype, 1)
         }
-        out = out.toArray()
         def expected = layerCount>2 ?
             dataset.outputs // final layer. supervised perceptron
             : dataset.inputs
-        double f = FCalculator.F(expected, out)
+        double f = FCalculator.F(expected, out as int[][])
         Objectives obj = new Objectives()
         obj.add(objectiveName, Objective.Sign.MAX, harmonicAvg(f, 1.0-sparisty))
     }
