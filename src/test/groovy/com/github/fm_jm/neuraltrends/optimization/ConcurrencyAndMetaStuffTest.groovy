@@ -72,8 +72,8 @@ class ConcurrencyAndMetaStuffTest extends GroovyTestCase {
 
         withPool(2) {
             [[1.0, 1.0], [-1.0, -1.0]].eachParallel {
-                Placeholder.instance.data.prototype = it
-                Placeholder.instance.data.creator.size = 2
+                Placeholder.instance.local.prototype = it
+                Placeholder.instance.local.creator.size = 2
                 Opt4JTask task = new Opt4JTask(false);
 
                 task.init(heuristic, rastr)

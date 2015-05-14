@@ -5,7 +5,9 @@ import org.dyndns.delphyne.groovy.ast.threadlocal.ThreadLocal
 @Singleton
 class Placeholder {
     @ThreadLocal
-    Map data = defaultMap()
+    Map local = defaultMap()
+
+    Map global = defaultMap()
 
     static Map defaultMap(String k=null){
         [:].withDefault Placeholder.&defaultMap
