@@ -1,5 +1,7 @@
 package com.github.fm_jm.neuraltrends
 
+import com.github.fm_jm.neuraltrends.evaluation.FCalculator
+import com.github.fm_jm.neuraltrends.optimization.L2
 import org.encog.Encog
 import org.encog.engine.network.activation.ActivationSigmoid
 import org.encog.ml.data.MLDataSet
@@ -37,7 +39,8 @@ class EncogEncoderTest extends GroovyTestCase{
         MLDataSet trainingSet = new BasicMLDataSet(data as double[][], data as double[][]);
 
         ResilientPropagation train = new ResilientPropagation(network, trainingSet);
-//        train.addStrategy(new RegularizationStrategy(0.3))
+//        train.addStrategy(new RegularizationStrategy(0.8))
+        train.addStrategy(new L2(0.1))
 
         epochs.times {
             train.iteration();
@@ -54,13 +57,18 @@ class EncogEncoderTest extends GroovyTestCase{
 
     void testEncoder(){
         def network = getTrainedNetwork(20)
+        def results = []
         use(BasicNetworkCategory){
             data.each { int[] pattern ->
-                bard.info "Should be: ${pattern}, was ${network.activate(pattern)}"
+                int[] out = network.activate(pattern)
+                results << out
+                bard.info "Should be: ${pattern}, was ${out}"
+                bard.info "F: ${FCalculator.F(pattern, out)}"
                 3.times {
                     bard.info "Layer ${it} activation density is ${network.activationDensity(it)}"
                 }
             }
+            bard.info "F total: ${FCalculator.F(data, results as int[][])}"
         }
     }
 }
