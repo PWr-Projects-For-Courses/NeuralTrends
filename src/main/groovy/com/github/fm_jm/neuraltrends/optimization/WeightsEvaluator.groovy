@@ -19,19 +19,19 @@ class WeightsEvaluator implements Evaluator<BasicNetwork> {
     Objectives evaluate(BasicNetwork phenotype) {
         DataSet dataset = Placeholder.instance.local.currentDataSet
         def out = []
-        double sparisty = 0.0
+        double sparsity = 0.0
         int layerCount = Placeholder.instance.local.layerSizes.size()
         String objectiveName = layerCount > 2 ? "harmonicOfFAndSparsity" : "F"
         dataset.inputs.each { int[] inputVector ->
             out.add BasicNetworkCategory.activate(phenotype, inputVector)
             if (layerCount>2)
-                sparisty += BasicNetworkCategory.activationDensity(phenotype, 1)
+                sparsity += BasicNetworkCategory.activationDensity(phenotype, 1)
         }
         def expected = layerCount>2 ?
             dataset.outputs // final layer. supervised perceptron
             : dataset.inputs
         double f = FCalculator.F(expected, out as int[][])
-        double objectiveValue = layerCount>2 ? harmonicAvg(f, 1.0 - (sparisty/dataset.size())) : f
+        double objectiveValue = layerCount>2 ? harmonicAvg(f, 1.0 - (sparsity/dataset.size())) : f
         Objectives obj = new Objectives()
         obj.add(objectiveName, Objective.Sign.MAX, objectiveValue)
         obj
