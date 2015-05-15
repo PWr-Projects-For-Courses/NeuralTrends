@@ -64,5 +64,6 @@ class LayerLearner {
             Placeholder.instance.local.layerSizes = layerSizes
         }
         runHeuristic(network, heuristic)
+        Placeholder.instance.local.prototype = null
     }
 }

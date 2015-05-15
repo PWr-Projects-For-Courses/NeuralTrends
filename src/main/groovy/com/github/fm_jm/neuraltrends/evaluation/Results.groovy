@@ -17,7 +17,7 @@ class Results {
     double f
     double time
 
-    static public Results retrieve(String collection, Map key){
+    static public Results retrieve(String collection="results", Map key){
         def res = MongoWrapper.retrieve(collection, key)
         if (!res)
             return null

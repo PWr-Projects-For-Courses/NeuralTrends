@@ -36,7 +36,7 @@ class BasicNetworkCategory {
      * @param layer number of layer from which connections are outgoing; 0 is input layer
      * @return array of weights, iterating over each upper neuron first, then over lower (ending with bias, if layer is biased)
      */
-    double[] getWeightsOverLayer(BasicNetwork network, int layer){
+    static double[] getWeightsOverLayer(BasicNetwork network, int layer){
         int lowerLayerSize = network.getLayerNeuronCount(layer)
         int upperLayerSize = network.getLayerNeuronCount(layer+1)
         boolean upperIsBiased = network.isLayerBiased(layer+1)
@@ -53,7 +53,7 @@ class BasicNetworkCategory {
         out
     }
 
-    void setWeightsOverLayer(BasicNetwork network, int layer, double[] weights){
+    static void setWeightsOverLayer(BasicNetwork network, int layer, double[] weights){
         int lowerLayerSize = network.getLayerNeuronCount(layer)
         int upperLayerSize = network.getLayerNeuronCount(layer+1)
         boolean upperIsBiased = network.isLayerBiased(layer+1)
