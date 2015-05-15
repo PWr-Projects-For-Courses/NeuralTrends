@@ -31,7 +31,9 @@ class WeightsEvaluator implements Evaluator<BasicNetwork> {
             dataset.outputs // final layer. supervised perceptron
             : dataset.inputs
         double f = FCalculator.F(expected, out as int[][])
+        double objectiveValue = layerCount>2 ? harmonicAvg(f, 1.0 - (sparisty/dataset.size())) : f
         Objectives obj = new Objectives()
-        obj.add(objectiveName, Objective.Sign.MAX, harmonicAvg(f, 1.0-sparisty))
+        obj.add(objectiveName, Objective.Sign.MAX, objectiveValue)
+        obj
     }
 }
