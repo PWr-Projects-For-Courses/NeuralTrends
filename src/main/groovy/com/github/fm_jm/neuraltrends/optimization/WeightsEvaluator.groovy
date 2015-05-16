@@ -25,7 +25,7 @@ class WeightsEvaluator implements Evaluator<BasicNetwork> {
         String objectiveName = layerCount > 2 ? "harmonicOfFAndSparsity" : "F"
         inputs.each { double[] inputVector ->
 //        dataset.inputs.each { int[] inputVector ->
-            out.add BasicNetworkCategory.activate(phenotype, inputVector)
+            out.add BasicNetworkCategory.activateNT(phenotype, inputVector)
             if (layerCount>2)
                 sparsity += BasicNetworkCategory.activationDensity(phenotype, 1)
         }
@@ -35,7 +35,7 @@ class WeightsEvaluator implements Evaluator<BasicNetwork> {
 //        double f = MeasureCalculator.F(expected, out as double[][])
         double primaryMeasure = layerCount>2 ?
                 MeasureCalculator.squaredError(expected, out as double[][])
-                : MeasureCalculator.F(expected as int[][], out as int[][])
+                : MeasureCalculator.F(expected as int[][], BasicNetworkCategory.threshold(out as double[][]))
         double objectiveValue = layerCount>2 ? harmonicAvg(primaryMeasure, 1.0 - (sparsity/(inputs.length))) : primaryMeasure
 //        double objectiveValue = layerCount>2 ? harmonicAvg(f, 1.0 - (sparsity/dataset.size())) : f
         Objectives obj = new Objectives()

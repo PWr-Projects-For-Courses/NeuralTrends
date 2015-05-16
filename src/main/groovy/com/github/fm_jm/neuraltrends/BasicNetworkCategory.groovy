@@ -31,6 +31,18 @@ class BasicNetworkCategory {
         out as int[][]
     }
 
+    static double[] activateNT(BasicNetwork network, double[] input){
+        network.compute(new BasicMLData(input)).data
+    }
+
+    static double[][] activateNT(BasicNetwork network, double[][] input){
+        def out = []
+        input.each { x ->
+            out << activateNT(network, x)
+        }
+        out as double[][]
+    }
+
     /**
      * IMPORTANT: for this to work it needs to be called right after activating the network
      * @param network Freshly activated network
@@ -47,6 +59,14 @@ class BasicNetworkCategory {
 
     static int[] threshold(double[] data){
         (int[]) data.collect { it>=0.5 ? 1 : 0 }.toArray()
+    }
+
+    static int[][] threshold(double[][] data){
+        def out = []
+        data.each {
+            out << threshold(it)
+        }
+        out as int[][]
     }
 
 

@@ -45,13 +45,10 @@ class Stacker implements Runnable{
         def size = hiddenSize(hiddenIdx)
         network.addLayer(new BasicLayer(new ActivationSigmoid(), true, size))
         network.structure.finalizeStructure()
-//        int[][] out = new int[inps.length][size]
-        network.setWeightsOverLayer(0, weights)
-//        inps.eachWithIndex { int[] inp, int i ->
-//            out[i] = network.activate(inp)
-//        }
-//        return out
-        network.activate(inps)
+        use(BasicNetworkCategory) {             // how the hell did it work without this? dit it work at all?
+            network.setWeightsOverLayer(0, weights)
+            network.activateNT(inps)
+        }
     }
 
     protected double[] learnAutoencoder(int inputSize, int hiddenSize){
