@@ -4,13 +4,14 @@ package com.github.fm_jm.neuraltrends.data
 
 class DataLoader {
 
-    final static int ATTRIBUTES = 499
-
+//    final static int ATTRIBUTES = 499
+    final static int ATTRIBUTES = 72
 
 
     static DataSet getDataSet(int foldNo, DataSet.Type type){
         String suffix = type == DataSet.Type.TEST ? "tst" : "tra"
-        getDataSet("corel5k-5-${foldNo}${suffix}.dat")
+//        getDataSet("corel5k-5-${foldNo}${suffix}.dat")
+        getDataSet("emotions-5-${foldNo}${suffix}.dat")
     }
 
     static DataSet getDataSet(String filename){
@@ -21,11 +22,11 @@ class DataLoader {
         file.eachLine {String line ->
             if (!(line.startsWith("@") || line.empty)){
                 def splitted = line.split(",")
-                inputs.add(splitted.getAt(0..ATTRIBUTES-1).collect {it.toInteger()})
+                inputs.add(splitted.getAt(0..ATTRIBUTES-1).collect {it.toDouble()})
                 outputs.add(splitted.getAt(ATTRIBUTES..splitted.size()-1).collect {it.toInteger()})
             }
         }
-        new DataSet(inputs as int[][], outputs as int[][])
+        new DataSet(inputs as double[][], outputs as int[][])
     }
 
 }

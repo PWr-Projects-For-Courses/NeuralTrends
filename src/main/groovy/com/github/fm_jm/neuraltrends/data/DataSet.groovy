@@ -10,7 +10,7 @@ class DataSet {
         TEST
     }
 
-    int[][] inputs
+    double[][] inputs
     int[][] outputs
 
     public int inputSize(){
