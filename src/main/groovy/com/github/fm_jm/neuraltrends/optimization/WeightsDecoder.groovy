@@ -13,15 +13,17 @@ class WeightsDecoder implements Decoder<DoubleGenotype, BasicNetwork> {
     @Override
     BasicNetwork decode(DoubleGenotype genotype) {
         BasicNetwork out = new BasicNetwork()
+        (Placeholder.instance.local.layerSizes as List<Integer>).eachWithIndex { int entry, int i ->
+            out.addLayer(new BasicLayer(i>0 ? new ActivationSigmoid() : null, i>0, entry))
+        }
+        out.getStructure().finalizeStructure();
         def currentStartIdx = 0
         use (BasicNetworkCategory){
             (Placeholder.instance.local.layerSizes as List<Integer>).eachWithIndex { int entry, int i ->
-                out.addLayer(new BasicLayer(i>0 ? new ActivationSigmoid() : null, i>0, entry))
-                out.setWeightsOverLayer(i, genotype[currentStartIdx..(currentStartIdx+entry-1)])
+                out.setWeightsOverLayer(i, genotype[currentStartIdx..(currentStartIdx+entry-1)] as double[])
                 currentStartIdx += entry
             }
         }
-        out.getStructure().finalizeStructure();
         out.reset()
         out
     }

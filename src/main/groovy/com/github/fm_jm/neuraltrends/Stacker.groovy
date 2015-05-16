@@ -3,6 +3,7 @@ package com.github.fm_jm.neuraltrends
 import com.github.fm_jm.neuraltrends.data.DataSet
 import com.github.fm_jm.neuraltrends.evaluation.FCalculator
 import com.github.fm_jm.neuraltrends.evaluation.Results
+import com.github.fm_jm.neuraltrends.optimization.Placeholder
 import groovy.time.TimeDuration
 import org.encog.engine.network.activation.ActivationSigmoid
 import org.encog.neural.networks.BasicNetwork
@@ -69,7 +70,7 @@ class Stacker implements Runnable{
 
     protected double[] learnLastLayer(){
         BasicNetwork perceptron = new BasicNetwork()
-        perceptron.addLayer(new BasicLayer(null, false, hiddenSize(layerCount-2)))
+        perceptron.addLayer(new BasicLayer(null, false, hiddenSize(layerCount-3)))
         perceptron.addLayer(new BasicLayer(new ActivationSigmoid(), true, dataSet.outputSize()))
         perceptron.structure.finalizeStructure()
         learner.learnWithBackprop(perceptron, new DataSet(layerOutputs.last(), dataSet.outputs), epochs, l2Lambda)
@@ -94,34 +95,47 @@ class Stacker implements Runnable{
     void run() {
         use (BasicNetworkCategory) {
             assert layerCount > 2
-            def lastLayer = new BasicLayer(null, false, dataSet.inputSize())
-            resultNetwork.addLayer(lastLayer)
+            buildNetwork()
+            log.info "Teaching"
             (layerCount - 2).times {
-                log.info "Layer $it"
-                int currentSize = hiddenSize(it)
-                double[] weights = learnAutoencoder(lastLayer.neuronCount, currentSize)
+                log.info "Teaching layer $it"
+                double[] weights = learnAutoencoder(it ? hiddenSize(it-1) : dataSet.inputSize(), hiddenSize(it))
                 layerOutputs << hiddenActivation(weights, layerOutputs.last(), it)
-                lastLayer = new BasicLayer(new ActivationSigmoid(), true, currentSize)
-                resultNetwork.addLayer(lastLayer)
                 resultNetwork.setWeightsOverLayer(it, weights)
             }
-            log.info "Last layer"
+            log.info "Teaching output layer"
             double[] weights = learnLastLayer()
-            resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, dataSet.outputSize()))
             resultNetwork.setWeightsOverLayer(layerCount - 2, weights)
         }
     }
 
+    protected void buildNetwork(){
+        log.info "Building network"
+        log.info "Adding input layer"
+        resultNetwork.addLayer(new BasicLayer(null, false, dataSet.inputSize()))
+        (layerCount - 2).times {
+            log.info "Adding hidden layer #$it"
+            resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, hiddenSize(it)))
+        }
+        log.info "Adding output layer"
+        resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, dataSet.outputSize()))
+        log.info "Finalizing"
+        resultNetwork.structure.finalizeStructure()
+    }
+
     Results evaluate(DataSet testDataSet){
         Date start = new Date()
+        log.info("Evaluating")
         run()
         Date stop = new Date()
         Results out = new Results()
+        def duration
         use (TimeCategory){
-            def duration = stop - start
+            duration = stop - start
             out.time = [duration.hours, duration.minutes, duration.seconds]
         }
-        out.f = FCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(testDataSet.inputs))
+        out.f = FCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(resultNetwork, testDataSet.inputs))
+        log.info("F: ${out.f}, duration: ${duration}")
         out
     }
 }

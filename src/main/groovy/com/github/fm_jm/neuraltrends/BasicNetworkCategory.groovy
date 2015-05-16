@@ -50,8 +50,9 @@ class BasicNetworkCategory {
     static double[] getWeightsOverLayer(BasicNetwork network, int layer){
         int lowerLayerSize = network.getLayerNeuronCount(layer)
         int upperLayerSize = network.getLayerNeuronCount(layer+1)
-        boolean upperIsBiased = network.isLayerBiased(layer+1)
-        double[] out = new double[(lowerLayerSize+(upperIsBiased ? 1 :0))*upperLayerSize]
+//        boolean upperIsBiased = network.isLayerBiased(layer+1)
+//        double[] out = new double[(lowerLayerSize+(upperIsBiased ? 1 :0))*upperLayerSize]
+        double[] out = new double[lowerLayerSize*upperLayerSize]
         int idx = 0
         upperLayerSize.times { int upperIdx ->
             lowerLayerSize.times { int lowerIdx ->
@@ -60,15 +61,18 @@ class BasicNetworkCategory {
 //            if (upperIsBiased)
 //                out[idx++] = network.structure.layers[upperIdx].biasActivation
         }
-        log.info "idx $idx, out.length ${out.length}"
-//        assert idx == out.length + 1
+        log.debug "get idx $idx, out.length ${out.length}"
+        def l = out.length
+//        assert idx == l
         out
     }
 
     static void setWeightsOverLayer(BasicNetwork network, int layer, double[] weights){
         int lowerLayerSize = network.getLayerNeuronCount(layer)
         int upperLayerSize = network.getLayerNeuronCount(layer+1)
-        boolean upperIsBiased = network.isLayerBiased(layer+1)
+        def l = weights.length
+//        boolean upperIsBiased = network.isLayerBiased(layer+1)
+//        assert l == lowerLayerSize*upperLayerSize
         int idx = 0
         upperLayerSize.times { int upperIdx ->
             lowerLayerSize.times { int lowerIdx ->
@@ -77,6 +81,8 @@ class BasicNetworkCategory {
 //            if (upperIsBiased)
 //                network.structure.layers[upperIdx].biasActivation = weights[idx++]
         }
-        assert idx == weights.length
+        log.debug "set idx $idx, out.length ${weights.length}"
+//        assert idx == l
+
     }
 }
