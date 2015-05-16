@@ -6,7 +6,7 @@ import groovy.transform.Canonical
 class Results {
 
     double f
-    String time
+    List<Integer> time
 
     String heuristic
     Map<String, Number> optimizerParams

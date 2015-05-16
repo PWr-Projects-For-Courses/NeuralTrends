@@ -3,6 +3,7 @@ package com.github.fm_jm.neuraltrends
 import com.github.fm_jm.neuraltrends.data.DataSet
 import com.github.fm_jm.neuraltrends.evaluation.FCalculator
 import com.github.fm_jm.neuraltrends.evaluation.Results
+import groovy.time.TimeDuration
 import org.encog.engine.network.activation.ActivationSigmoid
 import org.encog.neural.networks.BasicNetwork
 import org.encog.neural.networks.layers.BasicLayer
@@ -117,7 +118,8 @@ class Stacker implements Runnable{
         Date stop = new Date()
         Results out = new Results()
         use (TimeCategory){
-            out.time = (stop-start).toString()
+            def duration = stop - start
+            out.time = [duration.hours, duration.minutes, duration.seconds]
         }
         out.f = FCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(testDataSet.inputs))
         out

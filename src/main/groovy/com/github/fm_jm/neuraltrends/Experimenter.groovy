@@ -10,7 +10,7 @@ heuristics = ["ea", "pso"]
 foldNos = [1,2,3,4,5]
 generations = [0, 100, 200, 500]
 populations = [100, 200, 500]
-epochs = [0, 50, 100, 300]
+epochs = [0, 50, 100, 150]
 crossRates = [0.5, 0.75, 0.9]
 
 creatorParams = [lowerBound: 0, upperBound: 3, lowerMutator: 0.8 as double, upperMutator: 1.2 as double]
