@@ -15,7 +15,7 @@ class OptimizerModuleProvider {
         ea
     }
 
-    static OptimizerModule getPSO(int generations, int population, double perturbation){
+    static OptimizerModule getPSO(int generations, int population, double perturbation=0.5){
         OptimizerModule pso = new MOPSOModule()
         pso.iterations = generations
         pso.particles = population
