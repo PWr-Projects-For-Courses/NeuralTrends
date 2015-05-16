@@ -17,13 +17,18 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 class LayerLearner {
-    void learnWithBackprop(BasicNetwork network, DataSet dataSet, int epochs, double l2Lambda){
-        Placeholder.instance.local.currentDataSet = dataSet
+//    void learnWithBackprop(BasicNetwork network, DataSet dataSet, int epochs, double l2Lambda){
+    void learnWithBackprop(BasicNetwork network, double[][] inputs, double[][] outputs, int epochs, double l2Lambda){
+//        Placeholder.instance.local.currentDataSet = dataSet
+        Placeholder.instance.local.currentInputs = inputs
+        Placeholder.instance.local.currentOutputs = outputs
         def backprop = new ResilientPropagation(
             network,
             new BasicMLDataSet(
-                dataSet.inputs as double[][],
-                dataSet.outputs as double[][]
+//                dataSet.inputs as double[][],
+//                dataSet.outputs as double[][]
+                inputs,
+                outputs
             )
         )
         backprop.addStrategy(new L2(l2Lambda))

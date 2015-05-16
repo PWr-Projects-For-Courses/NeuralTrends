@@ -69,7 +69,7 @@ class BasicNetworkCategory {
 //            if (upperIsBiased)
 //                out[idx++] = network.structure.layers[upperIdx].biasActivation
         }
-        log.debug "get idx $idx, out.length ${out.length}"
+        log.debug "get idx $idx, out.length ${out.length} "
         def l = out.length
 //        assert idx == l
         out
@@ -80,7 +80,7 @@ class BasicNetworkCategory {
         int upperLayerSize = network.getLayerNeuronCount(layer+1)
         def l = weights.length
 //        boolean upperIsBiased = network.isLayerBiased(layer+1)
-//        assert l == lowerLayerSize*upperLayerSize
+        assert l == lowerLayerSize*upperLayerSize
         int idx = 0
         upperLayerSize.times { int upperIdx ->
             lowerLayerSize.times { int lowerIdx ->
