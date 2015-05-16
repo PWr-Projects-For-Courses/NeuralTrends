@@ -19,9 +19,12 @@ class WeightsDecoder implements Decoder<DoubleGenotype, BasicNetwork> {
         out.getStructure().finalizeStructure();
         def currentStartIdx = 0
         use (BasicNetworkCategory){
-            (Placeholder.instance.local.layerSizes as List<Integer>).eachWithIndex { int entry, int i ->
-                out.setWeightsOverLayer(i, genotype[currentStartIdx..(currentStartIdx+entry-1)] as double[])
-                currentStartIdx += entry
+            ((Placeholder.instance.local.layerSizes as List<Integer>).size()-1).times {int i ->
+                int entry = (Placeholder.instance.local.layerSizes as List<Integer>)[i]
+                def nextLayerSize = (Placeholder.instance.local.layerSizes as List<Integer>)[i+1]
+                int weightsCount = entry*nextLayerSize
+                out.setWeightsOverLayer(i, genotype[currentStartIdx..(currentStartIdx+weightsCount-1)] as double[])
+                currentStartIdx += weightsCount
             }
         }
         out.reset()

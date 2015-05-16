@@ -123,6 +123,9 @@ class Stacker implements Runnable{
         resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, dataSet.outputSize()))
         log.info "Finalizing"
         resultNetwork.structure.finalizeStructure()
+        resultNetwork.layerCount.times {
+            log.info "layer $it, neuron count: ${resultNetwork.getLayerNeuronCount(it)}"
+        }
     }
 
     Results evaluate(DataSet testDataSet){

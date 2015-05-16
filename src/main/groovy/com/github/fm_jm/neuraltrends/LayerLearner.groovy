@@ -68,11 +68,14 @@ class LayerLearner {
             (network.layerCount-1).times {
                 def layer = network.getWeightsOverLayer(it)
                 prototype.addAll(layer)
-                layerSizes << layer.size()
+//                layerSizes << layer.size()
+                layerSizes << network.getLayerNeuronCount(it)
             }
+            layerSizes << network.getLayerNeuronCount(network.layerCount-1)
             Placeholder.instance.local.layerSizes = layerSizes
         }
         Placeholder.instance.local.creator.size = prototype.size()
+        log.info "prototype size: ${Placeholder.instance.local.creator.size}"
         Placeholder.instance.local.prototype = prototype
         runHeuristic(network, heuristic)
         Placeholder.instance.local.prototype = null
