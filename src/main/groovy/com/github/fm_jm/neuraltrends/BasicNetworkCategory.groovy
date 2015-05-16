@@ -23,6 +23,14 @@ class BasicNetworkCategory {
         threshold(network.compute(new BasicMLData(input)).data)
     }
 
+    static int[][] activate(BasicNetwork network, double[][] input){
+        def out = []
+        input.each { x ->
+            out << activate(network, x)
+        }
+        out as int[][]
+    }
+
     /**
      * IMPORTANT: for this to work it needs to be called right after activating the network
      * @param network Freshly activated network
