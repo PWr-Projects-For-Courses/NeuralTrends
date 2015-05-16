@@ -46,12 +46,22 @@ class LayerLearner {
         Archive archive = task.getInstance(Archive.class);
         def genotype = archive.max { Individual i -> i.objectives.array()[0]}.genotype as DoubleGenotype
         def currentStartIdx = 0
-        use (BasicNetworkCategory) {
-            (Placeholder.instance.local.layerSizes as List<Integer>).eachWithIndex { int entry, int i ->
-                network.setWeightsOverLayer(i, genotype[currentStartIdx..(currentStartIdx + entry - 1)])
-                currentStartIdx += entry
+        use (BasicNetworkCategory){
+            ((Placeholder.instance.local.layerSizes as List<Integer>).size()-1).times {int i ->
+                int entry = (Placeholder.instance.local.layerSizes as List<Integer>)[i]
+                def nextLayerSize = (Placeholder.instance.local.layerSizes as List<Integer>)[i+1]
+                int weightsCount = entry*nextLayerSize
+                network.setWeightsOverLayer(i, genotype[currentStartIdx..(currentStartIdx+weightsCount-1)] as double[])
+                currentStartIdx += weightsCount
             }
         }
+
+//        use (BasicNetworkCategory) {
+//            (Placeholder.instance.local.layerSizes as List<Integer>).eachWithIndex { int entry, int i ->
+//                network.setWeightsOverLayer(i, genotype[currentStartIdx..(currentStartIdx + entry - 1)] as double[])
+//                currentStartIdx += entry
+//            }
+//        }
     }
 
     /**

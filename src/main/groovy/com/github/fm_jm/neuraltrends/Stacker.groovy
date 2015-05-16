@@ -1,10 +1,8 @@
 package com.github.fm_jm.neuraltrends
 
 import com.github.fm_jm.neuraltrends.data.DataSet
-import com.github.fm_jm.neuraltrends.evaluation.FCalculator
+import com.github.fm_jm.neuraltrends.evaluation.MeasureCalculator
 import com.github.fm_jm.neuraltrends.evaluation.Results
-import com.github.fm_jm.neuraltrends.optimization.Placeholder
-import groovy.time.TimeDuration
 import org.encog.engine.network.activation.ActivationSigmoid
 import org.encog.neural.networks.BasicNetwork
 import org.encog.neural.networks.layers.BasicLayer
@@ -41,7 +39,7 @@ class Stacker implements Runnable{
         this.creatorParams = creatorParams
     }
 
-    protected int[][] hiddenActivation(double[] weights, int[][] inps, int hiddenIdx){
+    protected int[][] hiddenActivation(double[] weights, double[][] inps, int hiddenIdx){
         BasicNetwork network = new BasicNetwork()
         network.addLayer(new BasicLayer(null, false, inps[0].size()))
         def size = hiddenSize(hiddenIdx)
@@ -74,7 +72,9 @@ class Stacker implements Runnable{
         perceptron.addLayer(new BasicLayer(null, false, hiddenSize(layerCount-3)))
         perceptron.addLayer(new BasicLayer(new ActivationSigmoid(), true, dataSet.outputSize()))
         perceptron.structure.finalizeStructure()
-        learner.learnWithBackprop(perceptron, layerOutputs.last(), dataSet.outputs, epochs, l2Lambda)
+//        log.info layerOutputs.toString()
+//        log.info layerOutputs.last().toString()
+        learner.learnWithBackprop(perceptron, layerOutputs.last() as double[][], dataSet.outputs as double[][], epochs, l2Lambda)
 //        learner.learnWithBackprop(perceptron, new DataSet(layerOutputs.last(), dataSet.outputs), epochs, l2Lambda)
         if (heuristic)
             learner.learnWithHeuristic(perceptron, heuristic, creatorParams)
@@ -139,7 +139,7 @@ class Stacker implements Runnable{
             duration = stop - start
             out.time = [duration.hours, duration.minutes, duration.seconds]
         }
-        out.f = FCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(resultNetwork, testDataSet.inputs))
+        out.f = MeasureCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(resultNetwork, testDataSet.inputs))
         log.info("F: ${out.f}, duration: ${duration}")
         out
     }

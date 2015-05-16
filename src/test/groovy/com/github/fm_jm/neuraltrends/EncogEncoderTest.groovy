@@ -1,6 +1,6 @@
 package com.github.fm_jm.neuraltrends
 
-import com.github.fm_jm.neuraltrends.evaluation.FCalculator
+import com.github.fm_jm.neuraltrends.evaluation.MeasureCalculator
 import com.github.fm_jm.neuraltrends.optimization.L2
 import org.encog.Encog
 import org.encog.engine.network.activation.ActivationSigmoid
@@ -11,7 +11,6 @@ import org.encog.neural.networks.layers.BasicLayer
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation
 
 import groovy.util.logging.Slf4j
-import org.encog.neural.networks.training.strategy.RegularizationStrategy
 
 @Slf4j("bard")
 class EncogEncoderTest extends GroovyTestCase{
@@ -63,12 +62,12 @@ class EncogEncoderTest extends GroovyTestCase{
                 int[] out = network.activate(pattern)
                 results << out
                 bard.info "Should be: ${pattern}, was ${out}"
-                bard.info "F: ${FCalculator.F(pattern, out)}"
+                bard.info "F: ${MeasureCalculator.F(pattern, out)}"
                 3.times {
                     bard.info "Layer ${it} activation density is ${network.activationDensity(it)}"
                 }
             }
-            bard.info "F total: ${FCalculator.F(data, results as int[][])}"
+            bard.info "F total: ${MeasureCalculator.F(data, results as int[][])}"
         }
     }
 }

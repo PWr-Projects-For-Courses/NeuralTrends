@@ -13,7 +13,7 @@ class FCalculatorTest extends GroovyTestCase {
             int[][] results = EncogEncoderTest.data.collect {
                 network.activate(it)
             } as int[][]
-            bard.info "F: ${FCalculator.F(EncogEncoderTest.data, results)}"
+            bard.info "F: ${MeasureCalculator.F(EncogEncoderTest.data, results)}"
         }
     }
 }

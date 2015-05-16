@@ -1,8 +1,7 @@
 package com.github.fm_jm.neuraltrends.optimization
 
 import com.github.fm_jm.neuraltrends.BasicNetworkCategory
-import com.github.fm_jm.neuraltrends.data.DataSet
-import com.github.fm_jm.neuraltrends.evaluation.FCalculator
+import com.github.fm_jm.neuraltrends.evaluation.MeasureCalculator
 import org.encog.neural.networks.BasicNetwork
 import org.opt4j.core.Objective
 import org.opt4j.core.Objectives
@@ -31,12 +30,13 @@ class WeightsEvaluator implements Evaluator<BasicNetwork> {
                 sparsity += BasicNetworkCategory.activationDensity(phenotype, 1)
         }
         def expected = layerCount>2 ?
-//            dataset.outputs // final layer. supervised perceptron
-//            : dataset.inputs
-            outputs
-            : inputs
-        double f = FCalculator.F(expected, out as int[][])
-        double objectiveValue = layerCount>2 ? harmonicAvg(f, 1.0 - (sparsity/(inputs.length))) : f
+            inputs
+            : outputs
+//        double f = MeasureCalculator.F(expected, out as double[][])
+        double primaryMeasure = layerCount>2 ?
+                MeasureCalculator.squaredError(expected, out as double[][])
+                : MeasureCalculator.F(expected as int[][], out as int[][])
+        double objectiveValue = layerCount>2 ? harmonicAvg(primaryMeasure, 1.0 - (sparsity/(inputs.length))) : primaryMeasure
 //        double objectiveValue = layerCount>2 ? harmonicAvg(f, 1.0 - (sparsity/dataset.size())) : f
         Objectives obj = new Objectives()
         obj.add(objectiveName, Objective.Sign.MAX, objectiveValue)

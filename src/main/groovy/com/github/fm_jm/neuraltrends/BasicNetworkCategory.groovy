@@ -89,7 +89,7 @@ class BasicNetworkCategory {
 //            if (upperIsBiased)
 //                network.structure.layers[upperIdx].biasActivation = weights[idx++]
         }
-        log.debug "set idx $idx, out.length ${weights.length}"
+//        log.debug "set idx $idx, out.length ${weights.length}"
 //        assert idx == l
 
     }

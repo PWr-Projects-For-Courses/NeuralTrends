@@ -9,7 +9,7 @@ Stacker stack = new Stacker(
     DataLoader.getDataSet(1, DataSet.Type.TRAIN),
     0,
     0.1,
-    OptimizerModuleProvider.getEA(3, 10, 0.8),
+    OptimizerModuleProvider.getEA(3, 5, 0.8),
     [:]
 )
 println stack.evaluate(DataLoader.getDataSet(1, DataSet.Type.TEST))
