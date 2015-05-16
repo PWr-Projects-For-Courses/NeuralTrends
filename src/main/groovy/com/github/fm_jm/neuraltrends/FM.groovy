@@ -1,5 +1,7 @@
 package com.github.fm_jm.neuraltrends
 
+import com.github.fm_jm.neuraltrends.data.DataLoader
+import com.github.fm_jm.neuraltrends.data.DataSet
 import com.gmongo.GMongo
 import com.mongodb.DBCollection
 import com.mongodb.MongoURI
@@ -13,16 +15,67 @@ import com.mongodb.MongoURI
 //col.remove([:   ])
 //println col.find() as List
 
-class SomeCategory {
-    static String foo(String s, int i){
-        "$s$i"
+//class SomeCategory {
+//    static String foo(String s, int i){
+//        "$s$i"
+//    }
+//}
+//
+//void x(){
+//    println "abc".foo(1)
+//}
+//
+//use(SomeCategory){
+//    x()
+//}
+
+//Stacker stack = new Stacker(3, DataLoader.getDataSet(1, DataSet.Type.TRAIN), 2, 0.1, null, [:])
+//println stack.evaluate(DataLoader.getDataSet(1, DataSet.Type.TEST))
+
+interface AI {
+    def foo()
+}
+
+class A implements AI{
+    final int x = 5
+
+    def foo(){
+        println 1
+    }
+
+    def bar(){
+        println x
     }
 }
+//
+//
+//AI.metaClass.foo = { println 2 }
+////A.metaClass.x = { return 3 }
+//
+//new A().foo()
+//def a = new A()
+//a.@x = 3
+//new A().bar()
 
-void x(){
-    println "abc".foo(1)
+def unsafe = sun.misc.Unsafe.theUnsafe
+
+def normalize = { int value ->
+    if(value >= 0) return value;
+    return (~0L >>> 32) & value;
 }
 
-use(SomeCategory){
-    x()
+def sizeOf = { Object object ->
+    return unsafe.getAddress(
+        normalize(unsafe.getInt(object, 4L)) + 12L);
 }
+
+def toAddress = { Object obj ->
+    Object[] array = [obj].toArray()
+    long baseOffset = unsafe.arrayBaseOffset(Object[].class);
+    return normalize(unsafe.getInt(array, baseOffset));
+}
+
+def newX = 3
+unsafe.copyMemory(newX, 0L, null, toAddress(A.@x), sizeOf(newX))
+
+new A().bar()

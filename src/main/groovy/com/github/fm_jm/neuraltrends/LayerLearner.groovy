@@ -27,7 +27,10 @@ class LayerLearner {
             )
         )
         backprop.addStrategy(new L2(l2Lambda))
-        backprop.iteration(epochs)
+        epochs.times {
+            log.info("Epoch $it/$epochs")
+            backprop.iteration()
+        }
         backprop.finishTraining()
     }
 
@@ -55,6 +58,7 @@ class LayerLearner {
     void learnWithHeuristic(BasicNetwork network, OptimizerModule heuristic, Map creatorParams){
         def layerSizes = []
         def prototype = []
+        Placeholder.instance.local.creator = creatorParams
         use(BasicNetworkCategory){
             (network.layerCount-1).times {
                 def layer = network.getWeightsOverLayer(it)

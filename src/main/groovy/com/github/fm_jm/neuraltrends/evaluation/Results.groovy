@@ -9,13 +9,13 @@ import groovy.transform.Canonical
 @Canonical
 class Results {
 
+    double f
+    String time
+
     String heuristic
     Map<String, Number> optimizerParams
     int epochs
     int foldNo
-
-    double f
-    double time
 
     static public Results retrieve(String collection="results", Map key){
         def res = MongoWrapper.retrieve(collection, key)

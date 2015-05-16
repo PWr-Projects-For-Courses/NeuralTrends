@@ -3,7 +3,18 @@ package com.github.fm_jm.neuraltrends
 import org.encog.ml.data.basic.BasicMLData
 import org.encog.neural.networks.BasicNetwork
 
+import groovy.util.logging.Slf4j
+
+@Slf4j
 class BasicNetworkCategory {
+    static int[][] activate(BasicNetwork network, int[][] input){
+        def out = []
+        input.each { x ->
+            out << activate(network, x)
+        }
+        out as int[][]
+    }
+
     static int[] activate(BasicNetwork network, int[] input){
         activate(network, (double[]) input)
     }
@@ -46,10 +57,11 @@ class BasicNetworkCategory {
             lowerLayerSize.times { int lowerIdx ->
                 out[idx++] = network.getWeight(layer, lowerIdx, upperIdx)
             }
-            if (upperIsBiased)
-                out[idx++] = network.structure.layers[upperIdx].biasActivation
+//            if (upperIsBiased)
+//                out[idx++] = network.structure.layers[upperIdx].biasActivation
         }
-        assert idx == out.length
+        log.info "idx $idx, out.length ${out.length}"
+//        assert idx == out.length + 1
         out
     }
 
@@ -62,8 +74,8 @@ class BasicNetworkCategory {
             lowerLayerSize.times { int lowerIdx ->
                 network.setWeight(layer, lowerIdx, upperIdx, weights[idx++])
             }
-            if (upperIsBiased)
-                network.structure.layers[upperIdx].biasActivation = weights[idx++]
+//            if (upperIsBiased)
+//                network.structure.layers[upperIdx].biasActivation = weights[idx++]
         }
         assert idx == weights.length
     }
