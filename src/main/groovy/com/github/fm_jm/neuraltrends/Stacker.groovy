@@ -96,8 +96,8 @@ class Stacker implements Runnable{
         if (state == null){
             state = new NetworkState(Placeholder.instance.local.state)
             Date start = new Date()
-            log.info "layerNo = ${state.layerNo}, count = ${layerCount}"   //layerNo skacze z 0 do 2, coś nie ten tego
-            state.weights = state.layerNo == layerCount-2 ? // -1 dziala, ale to nei rozwiazuje problemu
+            log.info "layerNo = ${state.layerNo}, count = ${layerCount}"
+            state.weights = state.layerNo == layerCount-2 ?
                 learnLastLayer() :
                 learnAutoencoder(state.layerNo ? hiddenSize(state.layerNo-1) : dataSet.inputSize(), hiddenSize(state.layerNo))
             Date stop = new Date()
@@ -125,7 +125,7 @@ class Stacker implements Runnable{
                 layerOutputs << hiddenActivation(weights, layerOutputs.last(), it)
                 resultNetwork.setWeightsOverLayer(it, weights)
             }
-            Placeholder.instance.local.state.layerNo = layerCount-1
+            Placeholder.instance.local.state.layerNo = layerCount-2
             log.info "Teaching output layer"
             resultNetwork.setWeightsOverLayer(layerCount - 2, get())
         }
@@ -153,7 +153,8 @@ class Stacker implements Runnable{
         use(TimeCategory, DurationsHelper){
             def sum = 0.seconds
             layerCount.times {
-                Placeholder.instance.local.state.layerCount = it
+                log.info "retrieving time for layer ${it}"
+                Placeholder.instance.local.state.layerNo = it
                 def state = NetworkState.retrieve(Placeholder.instance.local.state)
                 sum += state.time.toDuration()
             }
