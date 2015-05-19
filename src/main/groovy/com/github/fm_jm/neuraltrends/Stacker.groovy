@@ -65,7 +65,7 @@ class Stacker implements Runnable{
         learner.learnWithBackprop(encoder, layerOutputs.last() as double[][], layerOutputs.last() as double[][], epochs, l2Lambda)
 //        learner.learnWithBackprop(encoder, new DataSet(layerOutputs.last(), layerOutputs.last()), epochs, l2Lambda)
         if (heuristic)
-            learner.learnWithHeuristic(encoder, heuristic, creatorParams)
+            learner.learnWithHeuristic(encoder, layerOutputs.last() as double[][], layerOutputs.last() as double[][], heuristic, creatorParams)
         encoder.getWeightsOverLayer(0)
     }
 
@@ -79,7 +79,7 @@ class Stacker implements Runnable{
         learner.learnWithBackprop(perceptron, layerOutputs.last() as double[][], dataSet.outputs as double[][], epochs, l2Lambda)
 //        learner.learnWithBackprop(perceptron, new DataSet(layerOutputs.last(), dataSet.outputs), epochs, l2Lambda)
         if (heuristic)
-            learner.learnWithHeuristic(perceptron, heuristic, creatorParams)
+            learner.learnWithHeuristic(perceptron, layerOutputs.last() as double[][], dataSet.outputs as double[][], heuristic, creatorParams)
         perceptron.getWeightsOverLayer(0)
     }
 
@@ -96,7 +96,8 @@ class Stacker implements Runnable{
         if (state == null){
             state = new NetworkState(Placeholder.instance.local.state)
             Date start = new Date()
-            state.weights = state.layerNo == layerCount-2 ?
+            log.info "layerNo = ${state.layerNo}, count = ${layerCount}"   //layerNo skacze z 0 do 2, coś nie ten tego
+            state.weights = state.layerNo == layerCount-2 ? // -1 dziala, ale to nei rozwiazuje problemu
                 learnLastLayer() :
                 learnAutoencoder(state.layerNo ? hiddenSize(state.layerNo-1) : dataSet.inputSize(), hiddenSize(state.layerNo))
             Date stop = new Date()

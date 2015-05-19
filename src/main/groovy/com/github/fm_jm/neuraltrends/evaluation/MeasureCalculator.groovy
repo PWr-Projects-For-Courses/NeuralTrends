@@ -8,6 +8,7 @@ class MeasureCalculator {
 
 
     static double squaredError(double[] expected, double[] actual){
+//        println "    ${expected.length}, ${actual.length}"
         def nominator = 0
         expected.size().times {
             nominator += (expected[it] - actual[it])**2
@@ -16,6 +17,7 @@ class MeasureCalculator {
     }
 
     static double squaredError(double[][] expected, double[][] actual){
+//        println "${expected.length}, ${actual.length}"
         squaredError(Doubles.concat(expected), Doubles.concat(actual))
     }
 

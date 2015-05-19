@@ -70,10 +70,12 @@ class LayerLearner {
      * @param heuristic
      * @param creatorParams map of bounds and mutators used in creator
      */
-    void learnWithHeuristic(BasicNetwork network, OptimizerModule heuristic, Map creatorParams){
+    void learnWithHeuristic(BasicNetwork network, double[][] inputs, double[][] outputs,  OptimizerModule heuristic, Map creatorParams){
         def layerSizes = []
         def prototype = []
         Placeholder.instance.local.creator = creatorParams
+        Placeholder.instance.local.currentInputs = inputs
+        Placeholder.instance.local.currentOutputs = outputs
         use(BasicNetworkCategory){
             (network.layerCount-1).times {
                 def layer = network.getWeightsOverLayer(it)
