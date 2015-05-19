@@ -9,7 +9,7 @@ class NetworkState {
     int foldNo
     int epochs
     int layers
-    int layerNo
+    int layerNo //weights over this layer
 
     List<Integer> time
     List<Integer> layerSizes

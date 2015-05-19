@@ -25,7 +25,7 @@ class WeightsEvaluator implements Evaluator<BasicNetwork> {
         String objectiveName = layerCount > 2 ? "harmonicOfFAndSparsity" : "F"
         inputs.each { double[] inputVector ->
 //        dataset.inputs.each { int[] inputVector ->
-            out.add BasicNetworkCategory.activateNT(phenotype, inputVector)
+            out.add BasicNetworkCategory.activateNoThreshold(phenotype, inputVector)
             if (layerCount>2)
                 sparsity += BasicNetworkCategory.activationDensity(phenotype, 1)
         }

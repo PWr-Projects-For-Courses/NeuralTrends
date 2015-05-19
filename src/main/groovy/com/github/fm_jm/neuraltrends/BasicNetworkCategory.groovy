@@ -31,14 +31,14 @@ class BasicNetworkCategory {
         out as int[][]
     }
 
-    static double[] activateNT(BasicNetwork network, double[] input){
+    static double[] activateNoThreshold(BasicNetwork network, double[] input){
         network.compute(new BasicMLData(input)).data
     }
 
-    static double[][] activateNT(BasicNetwork network, double[][] input){
+    static double[][] activateNoThreshold(BasicNetwork network, double[][] input){
         def out = []
         input.each { x ->
-            out << activateNT(network, x)
+            out << activateNoThreshold(network, x)
         }
         out as double[][]
     }

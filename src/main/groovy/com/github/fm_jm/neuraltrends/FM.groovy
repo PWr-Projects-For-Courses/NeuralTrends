@@ -6,13 +6,13 @@ import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
 
 Stacker stack = new Stacker(
     3,
-    DataLoader.getDataSet(1, DataSet.Type.TRAIN),
+    0,
     0,
     0.1,
     OptimizerModuleProvider.getEA(3, 5, 0.8),
     [:]
 )
-println stack.evaluate(DataLoader.getDataSet(1, DataSet.Type.TEST))
+println stack.evaluate()
 
 //import com.github.fm_jm.neuraltrends.data.DataLoader
 //import com.github.fm_jm.neuraltrends.data.DataSet

@@ -28,10 +28,10 @@ foldNos.each {int foldNo ->
                                 Map key = getKey(foldNo, layerCount, epochs, generations, population, heuristic, crossRate)
                                 if (!MongoWrapper.exists("results", key)){
                                     def optimizer = OptimizerModuleProvider.getEA(generations, population, crossRate)
-                                    def trainSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
-                                    def testSet = DataLoader.getDataSet(foldNo, DataSet.Type.TEST)
-                                    def stacker = new Stacker(layerCount, trainSet, epochs, l2lambda, optimizer, creatorParams)
-                                    def res = stacker.evaluate(testSet)
+//                                    def trainSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
+//                                    def testSet = DataLoader.getDataSet(foldNo, DataSet.Type.TEST)
+                                    def stacker = new Stacker(layerCount, foldNo, epochs, l2lambda, optimizer, creatorParams)
+                                    def res = stacker.evaluate()
                                     res.fillInKey(key)
                                     res.store("results")
                                 }

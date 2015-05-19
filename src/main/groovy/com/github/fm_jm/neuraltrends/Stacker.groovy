@@ -1,8 +1,10 @@
 package com.github.fm_jm.neuraltrends
 
+import com.github.fm_jm.neuraltrends.data.DataLoader
 import com.github.fm_jm.neuraltrends.data.DataSet
 import com.github.fm_jm.neuraltrends.evaluation.MeasureCalculator
 import com.github.fm_jm.neuraltrends.evaluation.Results
+import com.github.fm_jm.neuraltrends.optimization.Placeholder
 import org.encog.engine.network.activation.ActivationSigmoid
 import org.encog.neural.networks.BasicNetwork
 import org.encog.neural.networks.layers.BasicLayer
@@ -12,16 +14,19 @@ import groovy.time.TimeCategory
 import groovy.transform.Canonical
 import groovy.util.logging.Slf4j
 
+import java.sql.Time
+
 @Canonical
 @Slf4j
 class Stacker implements Runnable{
     final int layerCount
-    final DataSet dataSet
+    final int foldNo
     final int epochs
     final double l2Lambda
     final OptimizerModule heuristic
     final Map creatorParams
 
+    final DataSet dataSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
     final BasicNetwork resultNetwork = new BasicNetwork()
     final private LayerLearner learner = new LayerLearner()
     final double q = Math.pow(
@@ -30,9 +35,9 @@ class Stacker implements Runnable{
     )
     final layerOutputs = [dataSet.inputs]
 
-    Stacker(int layerCount, DataSet dataSet, int epochs, double l2Lambda, OptimizerModule heuristic, Map creatorParams) {
+    Stacker(int layerCount, int foldNo, int epochs, double l2Lambda, OptimizerModule heuristic, Map creatorParams) {
         this.layerCount = layerCount
-        this.dataSet = dataSet
+        this.foldNo = foldNo
         this.epochs = epochs
         this.l2Lambda = l2Lambda
         this.heuristic = heuristic
@@ -47,7 +52,7 @@ class Stacker implements Runnable{
         network.structure.finalizeStructure()
         use(BasicNetworkCategory) {             // how the hell did it work without this? dit it work at all?
             network.setWeightsOverLayer(0, weights)
-            network.activateNT(inps)
+            network.activateNoThreshold(inps)
         }
     }
 
@@ -57,7 +62,7 @@ class Stacker implements Runnable{
         encoder.addLayer(new BasicLayer(new ActivationSigmoid(), true, hiddenSize))
         encoder.addLayer(new BasicLayer(new ActivationSigmoid(), true, inputSize))
         encoder.structure.finalizeStructure()
-        learner.learnWithBackprop(encoder, layerOutputs.last(), layerOutputs.last(), epochs, l2Lambda)
+        learner.learnWithBackprop(encoder, layerOutputs.last() as double[][], layerOutputs.last() as double[][], epochs, l2Lambda)
 //        learner.learnWithBackprop(encoder, new DataSet(layerOutputs.last(), layerOutputs.last()), epochs, l2Lambda)
         if (heuristic)
             learner.learnWithHeuristic(encoder, heuristic, creatorParams)
@@ -86,6 +91,22 @@ class Stacker implements Runnable{
         Math.ceil(1.5*dataSet.inputSize()*Math.pow(q, hiddenIdx))
     }
 
+    double[] get(){
+        NetworkState state = NetworkState.retrieve(Placeholder.instance.local.state)
+        if (state == null){
+            state = new NetworkState(Placeholder.instance.local.state)
+            Date start = new Date()
+            state.weights = state.layerNo == layerCount-2 ?
+                learnLastLayer() :
+                learnAutoencoder(state.layerNo ? hiddenSize(state.layerNo-1) : dataSet.inputSize(), hiddenSize(state.layerNo))
+            Date stop = new Date()
+            def duration = TimeCategory.minus(stop, start)
+            state.time = [duration.days, duration.hours, duration.minutes, duration.seconds]
+            state.layerSizes = Placeholder.instance.local.layerSizes
+        }
+        state.weights
+    }
+
     /**
      * Protected methods will be called only from here, and the whole methods is executed with category.
      * IDE will be pissed that some methods are not recognised, but should work anyway.
@@ -98,17 +119,19 @@ class Stacker implements Runnable{
             log.info "Teaching"
             (layerCount - 2).times {
                 log.info "Teaching layer $it"
-                double[] weights = learnAutoencoder(it ? hiddenSize(it-1) : dataSet.inputSize(), hiddenSize(it))
+                Placeholder.instance.local.state.layerNo = it
+                double[] weights = get()
                 layerOutputs << hiddenActivation(weights, layerOutputs.last(), it)
                 resultNetwork.setWeightsOverLayer(it, weights)
             }
+            Placeholder.instance.local.state.layerNo = layerCount-1
             log.info "Teaching output layer"
-            double[] weights = learnLastLayer()
-            resultNetwork.setWeightsOverLayer(layerCount - 2, weights)
+            resultNetwork.setWeightsOverLayer(layerCount - 2, get())
         }
     }
 
     protected void buildNetwork(){
+        Placeholder.instance.local.state = [ foldNo: foldNo, epochs:epochs, layers: layerCount ]
         log.info "Building network"
         log.info "Adding input layer"
         resultNetwork.addLayer(new BasicLayer(null, false, dataSet.inputSize()))
@@ -125,19 +148,26 @@ class Stacker implements Runnable{
         }
     }
 
-    Results evaluate(DataSet testDataSet){
-        Date start = new Date()
+    List<Integer> getTotalDuration(){
+        use(TimeCategory, DurationsHelper){
+            def sum = 0.seconds
+            layerCount.times {
+                Placeholder.instance.local.state.layerCount = it
+                def state = NetworkState.retrieve(Placeholder.instance.local.state)
+                sum += state.time.toDuration()
+            }
+            sum.toList()
+        }
+    }
+
+    Results evaluate(){
+        DataSet testDataSet = DataLoader.getDataSet(foldNo, DataSet.Type.TEST)
         log.info("Evaluating")
         run()
-        Date stop = new Date()
         Results out = new Results()
-        def duration
-        use (TimeCategory){
-            duration = stop - start
-            out.time = [duration.hours, duration.minutes, duration.seconds]
-        }
+        out.time = getTotalDuration()
         out.f = MeasureCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(resultNetwork, testDataSet.inputs))
-        log.info("F: ${out.f}, duration: ${duration}")
+        log.info("F: ${out.f}, duration: ${DurationsHelper.toDuration(out.time)}")
         out
     }
 }
