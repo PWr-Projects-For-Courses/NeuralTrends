@@ -12,7 +12,7 @@ class WeightsCreator implements Creator<DoubleGenotype>{
     DoubleGenotype create() {
         int size = Placeholder.instance.local.creator.size
         double[] prototype = Placeholder.instance.local.prototype
-        log.debug "New prototype: $prototype"
+        log.trace "New prototype: $prototype"
         double lowerBound = Placeholder.instance.local.creator.lowerBound ?: 0
         double upperBound = Placeholder.instance.local.creator.upperBound ?: 3
         double lowerMutator = Placeholder.instance.local.creator.lowerMutator ?: 0.8
@@ -27,7 +27,7 @@ class WeightsCreator implements Creator<DoubleGenotype>{
                 Math.min(upperBound, Math.max(lowerBound, mutator*it))
             })
         }
-        log.debug "New genotype: $genotype"
+        log.trace "New genotype: $genotype"
         genotype
     }
 }

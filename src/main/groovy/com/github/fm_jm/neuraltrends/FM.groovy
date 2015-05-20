@@ -7,16 +7,18 @@ import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
 Stacker stack = new Stacker(
     3,
     1,
-    0,
+    10,
     0.1,
-//    "EA",
-    "PSO",
-    [
-        generations: 3,
-        population: 5,
-//        crossoverRate: 0.8
-        perturbation: 0.7
-    ],
+    null,
+    null,
+//    "ea",
+//    "pso",
+//    [
+//        generations: 3,
+//        population: 5,
+//        crossoverRate: 0.8 as double
+////        perturbation: 0.7
+//    ],
 //    OptimizerModuleProvider.getEA(3, 5, 0.8),
     [:]
 )

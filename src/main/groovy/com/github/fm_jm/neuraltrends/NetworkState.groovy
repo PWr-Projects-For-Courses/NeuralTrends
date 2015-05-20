@@ -19,7 +19,7 @@ class NetworkState {
     List<Integer> layerSizes
     double[] weights
 
-    public void store(String collection="networks"){
+    public void store(String collection=Changable.collectionPrefix+"networks"){
         def key = [foldNo: foldNo, layers: layers, epochs: epochs, layerNo: layerNo,
                    heuristicName: heuristicName, heuristicParams: heuristicParams]
         def values = [time: time, layerSizes: layerSizes, weights: weights]
@@ -27,7 +27,7 @@ class NetworkState {
         MongoWrapper.store(collection, key, values)
     }
 
-    public static NetworkState retrieve(String collection = "networks", Map key){
+    public static NetworkState retrieve(String collection = Changable.collectionPrefix+"networks", Map key){
         def res = MongoWrapper.retrieve(collection, key)
         if (!res) {
             log.info "Retrieved $key -> null"
@@ -50,7 +50,7 @@ class NetworkState {
      * @param layerNo Number of layer
      * @return NetworkState of closest or exact network or null, if no matching results were found
      */
-    public static NetworkState retrieveClosest(String collection = "networks", int epochs, int foldNo, int layers, int layerNo){
+    public static NetworkState retrieveClosest(String collection = Changable.collectionPrefix+"networks", int epochs, int foldNo, int layers, int layerNo){
         Map key = [foldNo: foldNo, layers: layers, layerNo: layerNo]
         List<Map> possibilities = MongoWrapper.retrieveAll(collection, key)
         Map best = null

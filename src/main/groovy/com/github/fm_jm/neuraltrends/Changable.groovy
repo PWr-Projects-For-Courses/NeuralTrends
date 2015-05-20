@@ -8,4 +8,6 @@ class Changable {
 //    static def folds = [4, 5]
 
     static int poolSize = 4
+//    static String collectionPrefix = "fm_test_"
+    static String collectionPrefix = ""
 }

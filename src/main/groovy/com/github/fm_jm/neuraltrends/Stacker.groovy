@@ -30,8 +30,9 @@ class Stacker implements Runnable{
     final DataSet dataSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
     final BasicNetwork resultNetwork = new BasicNetwork()
     final private LayerLearner learner = new LayerLearner()
+    static final double multiplier = 1.5
     final double q = Math.pow(
-        dataSet.outputSize() / (1.5 * dataSet.inputSize()),
+        dataSet.outputSize() / (multiplier * dataSet.inputSize()),
         1.0/(layerCount-2)
     )
     final layerOutputs = [dataSet.inputs]
@@ -45,7 +46,7 @@ class Stacker implements Runnable{
         this.heuristicParams = heuristicParams
         this.creatorParams = creatorParams
 
-        if (heuristicParams.generations)
+        if (heuristicName && heuristicParams?.generations)
             switch (heuristicName) {
                 case "ea": this.heuristic = OptimizerModuleProvider.getEA(
                     heuristicParams.generations,
@@ -105,7 +106,7 @@ class Stacker implements Runnable{
      * INPUT -> HIDDEN0 -> HIDDEN1 -> ... -> HIDDEN(layerCount-3) -> OUTPUT
      */
     int hiddenSize(int hiddenIdx){
-        Math.ceil(1.5*dataSet.inputSize()*Math.pow(q, hiddenIdx))
+        Math.ceil(multiplier*dataSet.inputSize()*Math.pow(q, hiddenIdx))
     }
 
     double[] get(){

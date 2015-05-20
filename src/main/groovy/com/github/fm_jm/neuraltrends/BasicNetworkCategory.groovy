@@ -89,15 +89,15 @@ class BasicNetworkCategory {
 //            if (upperIsBiased)
 //                out[idx++] = network.structure.layers[upperIdx].biasActivation
         }
-        log.debug "get idx $idx, out.length ${out.length} "
+        log.trace "get idx $idx, out.length ${out.length} "
         def l = out.length
 //        assert idx == l
-        log.debug "getWeights $out"
+        log.trace "getWeights $out"
         out
     }
 
     static void setWeightsOverLayer(BasicNetwork network, int layer, double[] weights){
-        log.debug "setWeights $weights"
+        log.trace "setWeights $weights"
         int lowerLayerSize = network.getLayerNeuronCount(layer)
         int upperLayerSize = network.getLayerNeuronCount(layer+1)
         def l = weights.length
