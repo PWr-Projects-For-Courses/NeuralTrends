@@ -9,7 +9,15 @@ Stacker stack = new Stacker(
     0,
     0,
     0.1,
-    OptimizerModuleProvider.getEA(3, 5, 0.8),
+//    "EA",
+    "PSO",
+    [
+        generations: 3,
+        population: 5,
+//        crossoverRate: 0.8
+        perturbation: 0.7
+    ],
+//    OptimizerModuleProvider.getEA(3, 5, 0.8),
     [:]
 )
 println stack.evaluate()

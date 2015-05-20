@@ -4,6 +4,7 @@ import com.github.fm_jm.neuraltrends.data.DataLoader
 import com.github.fm_jm.neuraltrends.data.DataSet
 import com.github.fm_jm.neuraltrends.evaluation.MeasureCalculator
 import com.github.fm_jm.neuraltrends.evaluation.Results
+import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
 import com.github.fm_jm.neuraltrends.optimization.Placeholder
 import org.encog.engine.network.activation.ActivationSigmoid
 import org.encog.neural.networks.BasicNetwork
@@ -14,8 +15,6 @@ import groovy.time.TimeCategory
 import groovy.transform.Canonical
 import groovy.util.logging.Slf4j
 
-import java.sql.Time
-
 @Canonical
 @Slf4j
 class Stacker implements Runnable{
@@ -23,9 +22,11 @@ class Stacker implements Runnable{
     final int foldNo
     final int epochs
     final double l2Lambda
-    final OptimizerModule heuristic
+    final String heuristicName
+    final Map heuristicParams
     final Map creatorParams
 
+    final OptimizerModule heuristic
     final DataSet dataSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
     final BasicNetwork resultNetwork = new BasicNetwork()
     final private LayerLearner learner = new LayerLearner()
@@ -35,13 +36,29 @@ class Stacker implements Runnable{
     )
     final layerOutputs = [dataSet.inputs]
 
-    Stacker(int layerCount, int foldNo, int epochs, double l2Lambda, OptimizerModule heuristic, Map creatorParams) {
+    Stacker(int layerCount, int foldNo, int epochs, double l2Lambda, String heuristicName, Map heuristicParams, Map creatorParams) {
         this.layerCount = layerCount
         this.foldNo = foldNo
         this.epochs = epochs
         this.l2Lambda = l2Lambda
-        this.heuristic = heuristic
+        this.heuristicName = heuristicName
+        this.heuristicParams = heuristicParams
         this.creatorParams = creatorParams
+
+        if (heuristicParams.generations)
+            switch (heuristicName) {
+                case "ea": this.heuristic = OptimizerModuleProvider.getEA(
+                    heuristicParams.generations,
+                    heuristicParams.population,
+                    heuristicParams.crossoverRate
+                ); break;
+                case "pso": this.heuristic = OptimizerModuleProvider.getPSO(
+                    heuristicParams.generations,
+                    heuristicParams.population,
+                    heuristicParams.perturbation ?: 0.5
+                ); break;
+                default: assert "There are only 'ea' and 'pso' heuristics!" && false
+            }
     }
 
     protected int[][] hiddenActivation(double[] weights, double[][] inps, int hiddenIdx){
@@ -105,7 +122,7 @@ class Stacker implements Runnable{
                         dataSet.inputSize(),
                     hiddenSize(state.layerNo)
                 ) as double[]
-            println state.weights
+            log.debug "${state.weights}"
             Date stop = new Date()
             def duration = TimeCategory.minus(stop, start)
             state.time = [duration.days, duration.hours, duration.minutes, duration.seconds]
@@ -121,6 +138,7 @@ class Stacker implements Runnable{
      */
     @Override
     void run() {
+        Placeholder.instance.local.layerSizes = []
         use (BasicNetworkCategory) {
             assert layerCount > 2
             buildNetwork()
@@ -139,21 +157,32 @@ class Stacker implements Runnable{
     }
 
     protected void buildNetwork(){
-        Placeholder.instance.local.state = [ foldNo: foldNo, epochs:epochs, layers: layerCount ]
+        Placeholder.instance.local.state = [
+            foldNo: foldNo,
+            epochs:epochs,
+            layers: layerCount,
+            heuristicName: heuristicName,
+            heuristicParams: heuristicParams
+        ]
+        List layerSizes = []
         log.info "Building network"
         log.info "Adding input layer"
-        resultNetwork.addLayer(new BasicLayer(null, false, dataSet.inputSize()))
+        layerSizes << dataSet.inputSize()
+        resultNetwork.addLayer(new BasicLayer(null, false, layerSizes[-1]))
         (layerCount - 2).times {
             log.info "Adding hidden layer #$it"
-            resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, hiddenSize(it)))
+            layerSizes << hiddenSize(it)
+            resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, layerSizes[-1]))
         }
         log.info "Adding output layer"
-        resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, dataSet.outputSize()))
+        layerSizes << dataSet.outputSize()
+        resultNetwork.addLayer(new BasicLayer(new ActivationSigmoid(), true, layerSizes[-1]))
         log.info "Finalizing"
         resultNetwork.structure.finalizeStructure()
         resultNetwork.layerCount.times {
             log.info "layer $it, neuron count: ${resultNetwork.getLayerNeuronCount(it)}"
         }
+        Placeholder.instance.local.layerSizes = layerSizes
     }
 
     List<Integer> getTotalDuration(){
@@ -174,6 +203,10 @@ class Stacker implements Runnable{
         log.info("Evaluating")
         run()
         Results out = new Results()
+        out.epochs = epochs
+        out.foldNo = foldNo
+        out.heuristic = heuristicName
+        out.optimizerParams = heuristicParams
         out.time = getTotalDuration()
         out.f = MeasureCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(resultNetwork, testDataSet.inputs))
         log.info("F: ${out.f}, duration: ${DurationsHelper.toDuration(out.time)}")

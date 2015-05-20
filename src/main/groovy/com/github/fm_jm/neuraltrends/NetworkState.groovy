@@ -2,30 +2,42 @@ package com.github.fm_jm.neuraltrends
 
 import com.github.fm_jm.neuraltrends.evaluation.MongoWrapper
 import groovy.transform.Canonical
+import groovy.util.logging.Slf4j
 
 @Canonical
+@Slf4j
 class NetworkState {
 
     int foldNo
     int epochs
     int layers
     int layerNo //weights over this layer
+    String heuristicName
+    Map heuristicParams
 
     List<Integer> time
     List<Integer> layerSizes
     double[] weights
 
     public void store(String collection="networks"){
-        def key = [foldNo: foldNo, layers: layers, epochs: epochs, layerNo: layerNo]
+        def key = [foldNo: foldNo, layers: layers, epochs: epochs, layerNo: layerNo,
+                   heuristicName: heuristicName, heuristicParams: heuristicParams]
         def values = [time: time, layerSizes: layerSizes, weights: weights]
+        log.info "Storing $key -> $values"
         MongoWrapper.store(collection, key, values)
     }
 
     public static NetworkState retrieve(String collection = "networks", Map key){
         def res = MongoWrapper.retrieve(collection, key)
-        if (!res)
+        if (!res) {
+            log.info "Retrieved $key -> null"
             return null
-        return new NetworkState(key.foldNo, key.epochs, key.layers, key.layerNo, res.time, res.layerSizes, res.weights.toArray() as double[])
+        }
+        log.info "Retrieved $key -> ${res as Map}"
+        return new NetworkState(key.foldNo, key.epochs, key.layers, key.layerNo,
+            key.heuristicName, key.heuristicParams,
+            res.time, res.layerSizes, res.weights.toArray() as double[]
+        )
     }
 
     /**

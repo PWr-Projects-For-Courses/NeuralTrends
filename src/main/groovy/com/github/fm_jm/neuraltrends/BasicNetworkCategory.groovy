@@ -92,10 +92,12 @@ class BasicNetworkCategory {
         log.debug "get idx $idx, out.length ${out.length} "
         def l = out.length
 //        assert idx == l
+        log.debug "getWeights $out"
         out
     }
 
     static void setWeightsOverLayer(BasicNetwork network, int layer, double[] weights){
+        log.debug "setWeights $weights"
         int lowerLayerSize = network.getLayerNeuronCount(layer)
         int upperLayerSize = network.getLayerNeuronCount(layer+1)
         def l = weights.length
