@@ -7,7 +7,7 @@ import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
 
 layerCounts = [3,4,5]
 heuristics = ["ea", "pso"]
-foldNos = [1,2,3,4,5]
+foldNos = Changable.folds
 generations = [0, 100, 200, 500]
 populations = [100, 200, 500]
 epochs = [0, 50, 100, 150]
@@ -48,7 +48,7 @@ foldNos.each {int foldNo ->
 //                                def optimizer = OptimizerModuleProvider.getPSO(generations, population)
 //                                def trainSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
 //                                def testSet = DataLoader.getDataSet(foldNo, DataSet.Type.TEST)
-                                    def stacker = new Stacker(layerCount, foldNo, epochs, l2lambda, "PSO", [
+                                    def stacker = new Stacker(layerCount, foldNo, epochs, l2lambda, "pso", [
                                         generations: generations,
                                         population: population
                                     ], creatorParams)
