@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'application'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -13,6 +14,8 @@ repositories {
     mavenRepo(name: 'groovy-threadlocal-ast m2 repo', urls: ['http://groovy-threadlocal-ast.googlecode.com/git/repository/'])
 
 }
+
+mainClassName = "com.github.fm_jm.neuraltrends.Experimenter"
 
 dependencies {
     // Common dependencies
