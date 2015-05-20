@@ -6,7 +6,7 @@ import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
 
 Stacker stack = new Stacker(
     3,
-    0,
+    1,
     0,
     0.1,
 //    "EA",
