@@ -210,6 +210,8 @@ class Stacker implements Runnable{
         out.optimizerParams = heuristicParams
         out.time = getTotalDuration()
         out.f = MeasureCalculator.F(testDataSet.outputs, BasicNetworkCategory.activate(resultNetwork, testDataSet.inputs))
+        log.info "Thresholded ${BasicNetworkCategory.activate(resultNetwork, testDataSet.inputs)}"
+        log.info "NotThresholded ${BasicNetworkCategory.activateNoThreshold(resultNetwork, testDataSet.inputs)}"
         log.info("F: ${out.f}, duration: ${DurationsHelper.toDuration(out.time)}")
         out
     }

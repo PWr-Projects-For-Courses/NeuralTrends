@@ -33,7 +33,7 @@ class LayerLearner {
         )
         backprop.addStrategy(new L2(l2Lambda))
         epochs.times {
-            log.info("Epoch $it/$epochs")
+            log.info("Epoch $it/$epochs, error ${backprop.error}")
             backprop.iteration()
         }
         backprop.finishTraining()

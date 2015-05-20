@@ -5,13 +5,15 @@ package com.github.fm_jm.neuraltrends.data
 class DataLoader {
 
 //    final static int ATTRIBUTES = 499
-    final static int ATTRIBUTES = 72
+//    final static int ATTRIBUTES = 72
+    final static int ATTRIBUTES = 294
 
 
     static DataSet getDataSet(int foldNo, DataSet.Type type){
         String suffix = type == DataSet.Type.TEST ? "tst" : "tra"
 //        getDataSet("corel5k-5-${foldNo}${suffix}.dat")
-        getDataSet("emotions-5-${foldNo}${suffix}.dat")
+//        getDataSet("emotions-5-${foldNo}${suffix}.dat")
+        getDataSet("scene-5-${foldNo}${suffix}.dat")
     }
 
     static DataSet getDataSet(String filename){
