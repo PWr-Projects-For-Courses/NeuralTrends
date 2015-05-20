@@ -62,7 +62,7 @@ class Stacker implements Runnable{
             }
     }
 
-    protected int[][] hiddenActivation(double[] weights, double[][] inps, int hiddenIdx){
+    protected double[][] hiddenActivation(double[] weights, double[][] inps, int hiddenIdx){
         BasicNetwork network = new BasicNetwork()
         network.addLayer(new BasicLayer(null, false, inps[0].size()))
         def size = hiddenSize(hiddenIdx)

@@ -23,7 +23,7 @@ class NetworkState {
         def key = [foldNo: foldNo, layers: layers, epochs: epochs, layerNo: layerNo,
                    heuristicName: heuristicName, heuristicParams: heuristicParams]
         def values = [time: time, layerSizes: layerSizes, weights: weights]
-        log.info "Storing $key -> $values"
+        log.info "Storing $key"
         MongoWrapper.store(collection, key, values)
     }
 
@@ -33,7 +33,7 @@ class NetworkState {
             log.info "Retrieved $key -> null"
             return null
         }
-        log.info "Retrieved $key -> ${res as Map}"
+        log.info "Retrieved $key -> <notNull>"
         return new NetworkState(key.foldNo, key.epochs, key.layers, key.layerNo,
             key.heuristicName, key.heuristicParams,
             res.time, res.layerSizes, res.weights.toArray() as double[]

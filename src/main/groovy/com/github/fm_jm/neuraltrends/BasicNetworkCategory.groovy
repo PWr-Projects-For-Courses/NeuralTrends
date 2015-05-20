@@ -111,6 +111,7 @@ class BasicNetworkCategory {
 //            if (upperIsBiased)
 //                network.structure.layers[upperIdx].biasActivation = weights[idx++]
         }
+//        assert weights == getWeightsOverLayer(network, layer)
 //        log.debug "set idx $idx, out.length ${weights.length}"
 //        assert idx == l
 
