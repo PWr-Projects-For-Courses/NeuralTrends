@@ -13,19 +13,19 @@ class NetworkState {
 
     List<Integer> time
     List<Integer> layerSizes
-    List<Double> weights
+    double[] weights
 
     public void store(String collection="networks"){
         def key = [foldNo: foldNo, layers: layers, epochs: epochs, layerNo: layerNo]
         def values = [time: time, layerSizes: layerSizes, weights: weights]
-        MongoWrapper.store(key+values)
+        MongoWrapper.store(collection, key, values)
     }
 
     public static NetworkState retrieve(String collection = "networks", Map key){
         def res = MongoWrapper.retrieve(collection, key)
         if (!res)
             return null
-        return new NetworkState(key.foldNo, key.epochs, key.layers, key.layerNo, res.time, res.layerSizes, res.weights)
+        return new NetworkState(key.foldNo, key.epochs, key.layers, key.layerNo, res.time, res.layerSizes, res.weights.toArray() as double[])
     }
 
     /**

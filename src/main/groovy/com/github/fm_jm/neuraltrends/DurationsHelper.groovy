@@ -11,13 +11,13 @@ class DurationsHelper {
         int hours = d.hours
         int minutes = d.minutes
         int seconds = d.seconds
-        minutes += Math.floorDiv(seconds, 60)
+        minutes += (int) Math.floor(seconds/60)
         seconds = seconds % 60
-        hours += Math.floorDiv(minutes, 60)
+        hours += (int) Math.floor(minutes/60)
         minutes = minutes % 60
-        days += Math.floorDiv(hours, 24)
+        days += (int) Math.floor(hours/24)
         hours = hours % 24
-        months += Math.floorDiv(days, 30)
+        months += (int) Math.floor(days/30)
         days = days % 30
         def out
         use(TimeCategory){
@@ -28,8 +28,8 @@ class DurationsHelper {
     static def divide(TimeDuration d, int x){
         normalize(
             TimeCategory.getSeconds(
-                Math.floorDiv(
-                    d.seconds + d.minutes*60 + d.hours*60*60 + d.days*24*60*60 + d.months*30*24*60*60,
+                (int) Math.floor(
+                    (d.seconds + d.minutes*60 + d.hours*60*60 + d.days*24*60*60 + d.months*30*24*60*60) /
                     x
                 )
             )

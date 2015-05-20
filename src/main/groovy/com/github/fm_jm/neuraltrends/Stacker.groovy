@@ -98,12 +98,19 @@ class Stacker implements Runnable{
             Date start = new Date()
             log.info "layerNo = ${state.layerNo}, count = ${layerCount}"
             state.weights = state.layerNo == layerCount-2 ?
-                learnLastLayer() :
-                learnAutoencoder(state.layerNo ? hiddenSize(state.layerNo-1) : dataSet.inputSize(), hiddenSize(state.layerNo))
+                learnLastLayer() as double[] :
+                learnAutoencoder(
+                    state.layerNo ?
+                        hiddenSize(state.layerNo-1):
+                        dataSet.inputSize(),
+                    hiddenSize(state.layerNo)
+                ) as double[]
+            println state.weights
             Date stop = new Date()
             def duration = TimeCategory.minus(stop, start)
             state.time = [duration.days, duration.hours, duration.minutes, duration.seconds]
             state.layerSizes = Placeholder.instance.local.layerSizes
+            state.store()
         }
         state.weights
     }
@@ -152,7 +159,7 @@ class Stacker implements Runnable{
     List<Integer> getTotalDuration(){
         use(TimeCategory, DurationsHelper){
             def sum = 0.seconds
-            layerCount.times {
+            (layerCount-1).times {
                 log.info "retrieving time for layer ${it}"
                 Placeholder.instance.local.state.layerNo = it
                 def state = NetworkState.retrieve(Placeholder.instance.local.state)
