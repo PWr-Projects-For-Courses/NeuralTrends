@@ -10,7 +10,7 @@ heuristics = ["ea", "pso"]
 foldNos = [1,2,3,4,5]
 generations = [0, 100, 200, 500]
 populations = [100, 200, 500]
-epochs = [50, 100, 150]
+epochs = [0, 50, 100, 150]
 crossRates = [0.5, 0.75, 0.9]
 
 creatorParams = [lowerBound: 0, upperBound: 3, lowerMutator: 0.8 as double, upperMutator: 1.2 as double]
@@ -20,44 +20,45 @@ foldNos.each {int foldNo ->
     layerCounts.each {int layerCount ->
         epochs.each {int epochs ->
             generations.each {int generations ->
-                populations.each {int population ->
-                    heuristics.each {String heuristic ->
-                        if (heuristic == "ea"){
-                            crossRates.each {double crossRate ->
-                                //run ea
-                                Map key = getKey(foldNo, layerCount, epochs, generations, population, heuristic, crossRate)
-                                if (!MongoWrapper.exists("results", key)){
+                if (epochs || generations)
+                    populations.each {int population ->
+                        heuristics.each {String heuristic ->
+                            if (heuristic == "ea"){
+                                crossRates.each {double crossRate ->
+                                    //run ea
+                                    Map key = getKey(foldNo, layerCount, epochs, generations, population, heuristic, crossRate)
+                                    if (!MongoWrapper.exists("results", key)){
 //                                    def optimizer = OptimizerModuleProvider.getEA(generations, population, crossRate)
 //                                    def trainSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
 //                                    def testSet = DataLoader.getDataSet(foldNo, DataSet.Type.TEST)
-                                    def stacker = new Stacker(layerCount, foldNo, epochs, l2lambda, "ea", [
+                                        def stacker = new Stacker(layerCount, foldNo, epochs, l2lambda, "ea", [
+                                            generations: generations,
+                                            population: population,
+                                            crossoverRate: crossRate
+                                        ], creatorParams)
+                                        def res = stacker.evaluate()
+                                        res.fillInKey(key)
+                                        res.store("results")
+                                    }
+                                }
+                            } else {
+                                //run pso
+                                Map key = getKey(foldNo, layerCount, epochs, generations, population, heuristic)
+                                if (!MongoWrapper.exists("results", key)) {
+//                                def optimizer = OptimizerModuleProvider.getPSO(generations, population)
+//                                def trainSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
+//                                def testSet = DataLoader.getDataSet(foldNo, DataSet.Type.TEST)
+                                    def stacker = new Stacker(layerCount, foldNo, epochs, l2lambda, "PSO", [
                                         generations: generations,
-                                        population: population,
-                                        crossoverRate: crossRate
+                                        population: population
                                     ], creatorParams)
                                     def res = stacker.evaluate()
                                     res.fillInKey(key)
                                     res.store("results")
                                 }
                             }
-                        } else {
-                            //run pso
-                            Map key = getKey(foldNo, layerCount, epochs, generations, population, heuristic)
-                            if (!MongoWrapper.exists("results", key)) {
-//                                def optimizer = OptimizerModuleProvider.getPSO(generations, population)
-//                                def trainSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
-//                                def testSet = DataLoader.getDataSet(foldNo, DataSet.Type.TEST)
-                                def stacker = new Stacker(layerCount, foldNo, epochs, l2lambda, "PSO", [
-                                    generations: generations,
-                                    population: population
-                                ], creatorParams)
-                                def res = stacker.evaluate()
-                                res.fillInKey(key)
-                                res.store("results")
-                            }
                         }
                     }
-                }
             }
         }
     }
