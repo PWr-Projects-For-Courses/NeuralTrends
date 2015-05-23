@@ -6,9 +6,9 @@ import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
 import org.opt4j.core.start.Opt4J
 
 Stacker stack = new Stacker(
-    3,
+    7,
     1,
-    50,
+    1000,
     0.0,
     null,
     null,

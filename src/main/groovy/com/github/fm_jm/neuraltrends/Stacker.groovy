@@ -26,18 +26,20 @@ class Stacker implements Runnable{
     final Map heuristicParams
     final Map creatorParams
 
+    int batchSize = 50
+
     final OptimizerModule heuristic
     final DataSet dataSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
     final BasicNetwork resultNetwork = new BasicNetwork()
-    final private LayerLearner learner = new LayerLearner()
-    static final double multiplier = 1.5
+    @Lazy LayerLearner learner = new LayerLearner(batchSize)
+    static final double multiplier = 3.0
     final double q = Math.pow(
         dataSet.outputSize() / (multiplier * dataSet.inputSize()),
         1.0/(layerCount-2)
     )
     final layerOutputs = [dataSet.inputs]
 
-    Stacker(int layerCount, int foldNo, int epochs, double l2Lambda, String heuristicName, Map heuristicParams, Map creatorParams) {
+    Stacker(int layerCount, int foldNo, int epochs, double l2Lambda, String heuristicName, Map heuristicParams, Map creatorParams, int batchSize=50) {
         this.layerCount = layerCount
         this.foldNo = foldNo
         this.epochs = epochs
@@ -45,6 +47,7 @@ class Stacker implements Runnable{
         this.heuristicName = heuristicName
         this.heuristicParams = heuristicParams
         this.creatorParams = creatorParams
+        this.batchSize = batchSize
 
         if (heuristicName && heuristicParams?.generations)
             switch (heuristicName) {

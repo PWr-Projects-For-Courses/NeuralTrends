@@ -13,11 +13,13 @@ import org.opt4j.core.optimizer.Archive
 import org.opt4j.core.optimizer.OptimizerModule
 import org.opt4j.core.start.Opt4JTask
 
+import groovy.transform.Canonical
 import groovy.util.logging.Slf4j
 
 @Slf4j
+@Canonical
 class LayerLearner {
-    static final int batchSize = 50
+    int batchSize = 50
 
 //    void learnWithBackprop(BasicNetwork network, DataSet dataSet, int epochs, double l2Lambda){
     void learnWithBackprop(BasicNetwork network, double[][] inputs, double[][] outputs, int epochs, double l2Lambda) {
@@ -25,16 +27,17 @@ class LayerLearner {
         Placeholder.instance.local.currentInputs = inputs
         Placeholder.instance.local.currentOutputs = outputs
         def batchesToGo = (Math.ceil(inputs.length/batchSize) as int)
+        int epochsToGo = Math.ceil(epochs/batchesToGo) as int
         batchesToGo.times { int batchNo ->
             double[][] batchIn = Arrays.copyOfRange(
                 inputs,
                 batchNo*batchSize,
-                [(batchNo+1)*batchSize, inputs.length].max()
+                [(batchNo+1)*batchSize, inputs.length].min()
             )
             double[][] batchOut = Arrays.copyOfRange(
                 outputs,
                 batchNo*batchSize,
-                [(batchNo+1)*batchSize, inputs.length].max()
+                [(batchNo+1)*batchSize, inputs.length].min()
             )
             def backprop = new ResilientPropagation(
                 network,
@@ -48,20 +51,21 @@ class LayerLearner {
                 )
             )
             backprop.addStrategy(new L2(l2Lambda))
-            epochs.times { int epoch ->
-                log.info("Batch ${batchNo+1}/$batchesToGo; epoch ${epoch+1}/$epochs, error ${backprop.error}")
+            epochsToGo.times { int epoch ->
+                log.info("Batch ${batchNo+1}/$batchesToGo; epoch ${epoch+1}/$epochsToGo, error ${backprop.error}")
                 backprop.iteration()
             }
             def eval = MeasureCalculator.squaredError(
-                outputs as double[][],
+                batchOut,
                 BasicNetworkCategory.activateNoThreshold(
                     network,
-                    inputs as double[][]
+                    batchIn
                 )
             )
             log.info "Batch ${batchNo+1}/$batchesToGo eval: ${eval}"
             backprop.finishTraining()
         }
+        def eval = MeasureCalculator.squaredError(outputs, BasicNetworkCategory.activateNoThreshold(network, inputs))
     }
 
     void runHeuristic(BasicNetwork network, OptimizerModule heuristic){
