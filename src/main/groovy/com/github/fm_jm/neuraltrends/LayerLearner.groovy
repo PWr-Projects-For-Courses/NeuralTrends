@@ -1,6 +1,7 @@
 package com.github.fm_jm.neuraltrends
 
 import com.github.fm_jm.neuraltrends.data.DataSet
+import com.github.fm_jm.neuraltrends.evaluation.MeasureCalculator
 import com.github.fm_jm.neuraltrends.optimization.L2
 import com.github.fm_jm.neuraltrends.optimization.Placeholder
 import com.github.fm_jm.neuraltrends.optimization.WeightsModule
@@ -18,7 +19,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class LayerLearner {
 //    void learnWithBackprop(BasicNetwork network, DataSet dataSet, int epochs, double l2Lambda){
-    void learnWithBackprop(BasicNetwork network, double[][] inputs, double[][] outputs, int epochs, double l2Lambda){
+    void learnWithBackprop(BasicNetwork network, double[][] inputs, double[][] outputs, int epochs, double l2Lambda) {
 //        Placeholder.instance.local.currentDataSet = dataSet
         Placeholder.instance.local.currentInputs = inputs
         Placeholder.instance.local.currentOutputs = outputs
@@ -36,6 +37,15 @@ class LayerLearner {
             log.info("Epoch $it/$epochs, error ${backprop.error}")
             backprop.iteration()
         }
+        def eval = MeasureCalculator.squaredError(
+            outputs as double[][],
+            BasicNetworkCategory.activateNoThreshold(
+                network,
+                inputs as double[][]
+            )
+        )
+
+        log.info "Eval: ${eval}"
         backprop.finishTraining()
     }
 
