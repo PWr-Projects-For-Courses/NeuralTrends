@@ -8,7 +8,7 @@ import org.opt4j.core.start.Opt4J
 Stacker stack = new Stacker(
     3,
     1,
-    10,
+    50,
     0.0,
     null,
     null,
