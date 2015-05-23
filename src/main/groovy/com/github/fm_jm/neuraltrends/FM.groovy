@@ -6,20 +6,18 @@ import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
 import org.opt4j.core.start.Opt4J
 
 Stacker stack = new Stacker(
-    7,
+    4,
     1,
     1000,
     0.1,
-    null,
-    null,
-//    "ea",
+    "ea",
 //    "pso",
-//    [
-//        generations: 3,
-//        population: 5,
-//        crossoverRate: 0.8 as double
-////        perturbation: 0.7
-//    ],
+    [
+        generations: 10,
+        population: 20,
+        crossoverRate: 0.8 as double
+//        perturbation: 0.7
+    ],
 //    OptimizerModuleProvider.getEA(3, 5, 0.8),
     [:]
 )

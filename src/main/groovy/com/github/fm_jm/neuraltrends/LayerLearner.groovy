@@ -72,10 +72,11 @@ class LayerLearner {
     void runHeuristic(BasicNetwork network, OptimizerModule heuristic){
         Opt4JTask task = new Opt4JTask(false);
         task.init(heuristic, new WeightsModule())
+        def genotype
         try {
             task.execute()
             Archive archive = task.getInstance(Archive.class);
-            def genotype = archive.max { Individual i -> i.objectives.array()[0]}.genotype as DoubleGenotype
+            genotype = archive.max { Individual i -> i.objectives.array()[0]}.genotype as DoubleGenotype
         } finally {
             task.close()
         }

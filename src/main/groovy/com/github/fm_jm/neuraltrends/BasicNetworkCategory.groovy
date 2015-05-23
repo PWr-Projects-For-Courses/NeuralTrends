@@ -52,7 +52,8 @@ class BasicNetworkCategory {
     static double activationDensity(BasicNetwork network, int layer){
         int activated = 0
         network.getLayerNeuronCount(layer).times {
-            activated += network.getLayerOutput(layer,it) >= 0.5 ? 1 : 0
+//            activated += network.getLayerOutput(layer,it) >= 0.5 ? 1 : 0
+              activated += network.getLayerOutput(layer, it)
         }
         return activated/network.getLayerNeuronCount(layer)
     }
