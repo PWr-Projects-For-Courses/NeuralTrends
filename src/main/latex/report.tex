@@ -1,0 +1,74 @@
+\documentclass[11pt,a4paper,oneside]{report}
+
+\usepackage[MeX]{polski}
+%\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\usepackage{fontspec}
+\usepackage[table,xcdraw]{xcolor}
+
+% Dodane przeze mnie d
+\usepackage{fancyvrb} % dla srodowiska Verbatim
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{lscape}
+
+\usepackage{algpseudocode}
+\usepackage[chapter]{algorithm}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage[english, polish]{babel}
+
+\definecolor{stal}{rgb}{0.75, 0.75, 0.75}
+
+\newcommand{\todo}{\colorbox{red}}
+
+\begin{document}
+
+\title{Techniki heurystycznego uczenia warstw ukrytych w sieci głębokiej}
+\author{inż. Jacek Miszczak \\ inż. Filip Malczak}
+\date{3.06.2015}
+\maketitle
+
+\begin{abstract}
+Your abstract goes here...
+...
+\end{abstract}
+
+\tableofcontents
+
+\chapter{Wstęp}
+
+ąężźćółń \cite{belew1990evolving} \cite{kennedy2010particle}
+
+\chapter{Wprowadzenie}
+
+\section{Stosy autokoderów}
+
+\section{Algorytmy genetyczne}
+
+Ewolucja to proces zachodzący w naturze odpowiedzialny za dopasowywanie się osobników danego gatunku do środowiska w jakim żyją. Podstawą tego procesu jest przetrwanie lepiej przystosowanych osobników, dziedziczenie i mutacja.
+
+Przetrwanie lepiej przystosowanych osobników to zasada zgodnie z którą osobniki lepiej dopasowane do środowiska mają większą szansę na przeżycie, a co za tym idzie, na wydanie potomstwa. Oznacza to, że rodzice większości osobników z kolejnego pokolenia będą radzić sobie w tym środowisku lepiej niż pozostałe osobniki z ich pokolenia.
+
+Dziedziczenie to zjawisko przekazywania cech rodziców dzieciom. Odbywa się ono podczas rozmnażania, a więc zachodzi między dwojgiem rodziców, a potomstwem. Kod genetyczny potomstwa tworzony jest przez losowe łączenie odpowiednich części kodu genetycznego rodziców, przez co kolejne pokolenie dzieli ich cechy. W ten sposób losowe osobniki przejmą od rodziców te cechy, które pozwalały im się dopasować do środowiska i w niektórych przypadkach pozwoli im to na jeszcze lepsze dopasowanie się do otoczenia. Część osobników przejmie jednak nie tylko cechy poprawiające ich szansę przetrwania, ale również cechy negatywne, co przełoży się na ich gorsze dopasowanie.
+
+Mutacja to zjawisko zachodzenia losowych zmian w kodzie genetycznym osobnika, przez które ma on szansę zyskać nowe cechy, które w niektórych przypadkach doprowadzą do lepszego dopasowania. Osobniki z przypadkowymi zmianami, które poprawiają ich dopasowanie mają większe szanse na przeżycie i wydanie potomstwa, \textit{ergo} przypadkowe pozytywne zmiany powinny zostać rozpropagowane wśród osobników przyszłych pokoleń.
+
+Algorytmy ewolucyjne to rodzina heurystyk naśladujących proces ewolucji w celu optymalizacji \cite{davis1991handbook}. Pojedynczy punkt w przestrzeni rozwiązań jest w nich nazywany osobnikiem. Osobniki możemy między sobą porównywać pod względem wartości optymalizowanej funkcji dla nich, a relacja mniejszości (dla problemów minimalizacji) lub większości (dla problemów maksymalizacji) reprezentuje relację bycia lepiej przystosowanym do środowiska. Ponadto, na osobnikach określone są operatory mutacji i krzyżowania, które mają na celu kolejno symulację losowych zmian w osobniku i tworzenie nowych osobników na podstawie starych. Heurystyka polega na wielokrotnym przetworzeniu populacji (czyli zbioru osobników) poprzez zastosowanie każdego z operatorów z pewnym prawdopodobieństwem. W każdym kroku (nazywanym w nomeklaturze algorytmów ewolucyjnych pokoleniem) do dotychczasowej populacji dołączane są wyniki działania tych operatorów (czyli zbiory osobników zmutowanych i potomstwa), a następnie wybierana jest nowa populacja, używana w kolejnym kroku. Aby odwzorować zasadę przetrwania najlepiej dopasowanych osobników do kolejnej populacji wybierane są z wyższym prawdopodobieństwem osobniki lepiej przystosowane.
+
+
+\section{Particle Swarm Optimization}
+
+\chapter{Zaproponowane rozwiązanie}
+
+\chapter{Badania}
+
+\chapter{Podsumowanie}
+
+\bibliographystyle{plain}
+\bibliography{bibliografia}
+
+\end{document}
