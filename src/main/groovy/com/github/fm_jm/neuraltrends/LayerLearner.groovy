@@ -7,6 +7,7 @@ import com.github.fm_jm.neuraltrends.optimization.WeightsModule
 import org.encog.ml.data.basic.BasicMLDataSet
 import org.encog.neural.networks.BasicNetwork
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation
+import org.encog.neural.networks.training.strategy.RegularizationStrategy
 import org.opt4j.core.Individual
 import org.opt4j.core.genotype.DoubleGenotype
 import org.opt4j.core.optimizer.Archive
@@ -50,7 +51,7 @@ class LayerLearner {
                     batchOut
                 )
             )
-            backprop.addStrategy(new L2(l2Lambda))
+            backprop.addStrategy(new RegularizationStrategy(l2Lambda))
             epochsToGo.times { int epoch ->
                 log.info("Batch ${batchNo+1}/$batchesToGo; epoch ${epoch+1}/$epochsToGo, error ${backprop.error}")
                 backprop.iteration()

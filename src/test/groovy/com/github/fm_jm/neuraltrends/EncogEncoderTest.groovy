@@ -27,8 +27,8 @@ class EncogEncoderTest extends GroovyTestCase{
     static BasicNetwork getTrainedNetwork(int epochs){
         BasicNetwork network = new BasicNetwork();
         def input = new BasicLayer(null,false,6)
-        def hidden = new BasicLayer(new ActivationSigmoid(),true,10)
-        def output = new BasicLayer(new ActivationSigmoid(),true,6)
+        def hidden = new BasicLayer(Changable.activationFunction,true,10)
+        def output = new BasicLayer(Changable.activationFunction,true,6)
         network.addLayer(input);
         network.addLayer(hidden);
         network.addLayer(output);

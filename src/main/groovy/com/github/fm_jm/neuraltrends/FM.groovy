@@ -1,10 +1,5 @@
 package com.github.fm_jm.neuraltrends
 
-import com.github.fm_jm.neuraltrends.data.DataLoader
-import com.github.fm_jm.neuraltrends.data.DataSet
-import com.github.fm_jm.neuraltrends.optimization.OptimizerModuleProvider
-import org.opt4j.core.start.Opt4J
-
 Stacker stack = new Stacker(
     4,
     1,

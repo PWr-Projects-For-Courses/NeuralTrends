@@ -1,7 +1,7 @@
 package com.github.fm_jm.neuraltrends.optimization
 
 import com.github.fm_jm.neuraltrends.BasicNetworkCategory
-import org.encog.engine.network.activation.ActivationSigmoid
+import com.github.fm_jm.neuraltrends.Changable
 import org.encog.neural.networks.BasicNetwork
 import org.encog.neural.networks.layers.BasicLayer
 import org.opt4j.core.genotype.DoubleGenotype
@@ -14,7 +14,7 @@ class WeightsDecoder implements Decoder<DoubleGenotype, BasicNetwork> {
     BasicNetwork decode(DoubleGenotype genotype) {
         BasicNetwork out = new BasicNetwork()
         (Placeholder.instance.local.layerSizes as List<Integer>).eachWithIndex { int entry, int i ->
-            out.addLayer(new BasicLayer(i>0 ? new ActivationSigmoid() : null, i>0, entry))
+            out.addLayer(new BasicLayer(i>0 ? Changable.activationFunction : null, i>0, entry))
         }
         out.getStructure().finalizeStructure();
         def currentStartIdx = 0
