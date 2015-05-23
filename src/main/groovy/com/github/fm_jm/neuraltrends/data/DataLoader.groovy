@@ -61,6 +61,6 @@ class DataLoader {
             }
 
         }
-        new DataSet(inputs[0..10] as double[][], outputs[0..10] as int[][])
+        new DataSet(inputs as double[][], outputs as int[][])
     }
 }

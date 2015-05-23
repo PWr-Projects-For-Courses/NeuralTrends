@@ -1,6 +1,5 @@
 package com.github.fm_jm.neuraltrends
 
-import com.github.fm_jm.neuraltrends.data.DataSet
 import com.github.fm_jm.neuraltrends.evaluation.MeasureCalculator
 import com.github.fm_jm.neuraltrends.optimization.L2
 import com.github.fm_jm.neuraltrends.optimization.Placeholder
@@ -18,35 +17,51 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 class LayerLearner {
+    static final int batchSize = 50
+
 //    void learnWithBackprop(BasicNetwork network, DataSet dataSet, int epochs, double l2Lambda){
     void learnWithBackprop(BasicNetwork network, double[][] inputs, double[][] outputs, int epochs, double l2Lambda) {
 //        Placeholder.instance.local.currentDataSet = dataSet
         Placeholder.instance.local.currentInputs = inputs
         Placeholder.instance.local.currentOutputs = outputs
-        def backprop = new ResilientPropagation(
-            network,
-            new BasicMLDataSet(
+        def batchesToGo = (Math.ceil(inputs.length/batchSize) as int)
+        batchesToGo.times { int batchNo ->
+            double[][] batchIn = Arrays.copyOfRange(
+                inputs,
+                batchNo*batchSize,
+                [(batchNo+1)*batchSize, inputs.length].max()
+            )
+            double[][] batchOut = Arrays.copyOfRange(
+                outputs,
+                batchNo*batchSize,
+                [(batchNo+1)*batchSize, inputs.length].max()
+            )
+            def backprop = new ResilientPropagation(
+                network,
+                new BasicMLDataSet(
 //                dataSet.inputs as double[][],
 //                dataSet.outputs as double[][]
-                inputs,
-                outputs
+//                    inputs,
+//                    outputs
+                    batchIn,
+                    batchOut
+                )
             )
-        )
-        backprop.addStrategy(new L2(l2Lambda))
-        epochs.times {
-            log.info("Epoch $it/$epochs, error ${backprop.error}")
-            backprop.iteration()
+            backprop.addStrategy(new L2(l2Lambda))
+            epochs.times { int epoch ->
+                log.info("Batch ${batchNo+1}/$batchesToGo; epoch ${epoch+1}/$epochs, error ${backprop.error}")
+                backprop.iteration()
+            }
+            def eval = MeasureCalculator.squaredError(
+                outputs as double[][],
+                BasicNetworkCategory.activateNoThreshold(
+                    network,
+                    inputs as double[][]
+                )
+            )
+            log.info "Batch ${batchNo+1}/$batchesToGo eval: ${eval}"
+            backprop.finishTraining()
         }
-        def eval = MeasureCalculator.squaredError(
-            outputs as double[][],
-            BasicNetworkCategory.activateNoThreshold(
-                network,
-                inputs as double[][]
-            )
-        )
-
-        log.info "Eval: ${eval}"
-        backprop.finishTraining()
     }
 
     void runHeuristic(BasicNetwork network, OptimizerModule heuristic){
