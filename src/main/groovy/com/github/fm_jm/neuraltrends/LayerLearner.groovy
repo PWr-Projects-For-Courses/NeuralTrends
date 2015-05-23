@@ -55,12 +55,13 @@ class LayerLearner {
                 log.info("Batch ${batchNo+1}/$batchesToGo; epoch ${epoch+1}/$epochsToGo, error ${backprop.error}")
                 backprop.iteration()
             }
+            def out = BasicNetworkCategory.activateNoThreshold(
+                network,
+                batchIn
+            )
             def eval = MeasureCalculator.squaredError(
                 batchOut,
-                BasicNetworkCategory.activateNoThreshold(
-                    network,
-                    batchIn
-                )
+                out
             )
             log.info "Batch ${batchNo+1}/$batchesToGo eval: ${eval}"
             backprop.finishTraining()

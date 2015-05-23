@@ -64,7 +64,7 @@ public class L2 implements Strategy {
         this.encodable.encodeToArray(newWeights);
 
         for (int i = 0; i < newWeights.length; i++) {
-            newWeights[i] -= (lambda * weights[i])**2;
+            newWeights[i] = Math.signum(newWeights[i]) * (Math.abs(newWeights[i]) - (lambda * weights[i])**2);
         }
 
         this.encodable.decodeFromArray(newWeights);

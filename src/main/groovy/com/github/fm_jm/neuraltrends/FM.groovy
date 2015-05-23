@@ -9,7 +9,7 @@ Stacker stack = new Stacker(
     7,
     1,
     1000,
-    0.0,
+    0.1,
     null,
     null,
 //    "ea",
