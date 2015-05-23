@@ -69,7 +69,7 @@ class Stacker implements Runnable{
         BasicNetwork network = new BasicNetwork()
         network.addLayer(new BasicLayer(null, false, inps[0].size()))
         def size = hiddenSize(hiddenIdx)
-        network.addLayer(new BasicLayer(Changable.activationFunction(), true, size))
+        network.addLayer(new BasicLayer(Changable.activationFunction, true, size))
         network.structure.finalizeStructure()
         use(BasicNetworkCategory) {             // how the hell did it work without this? dit it work at all?
             network.setWeightsOverLayer(0, weights)
@@ -80,8 +80,8 @@ class Stacker implements Runnable{
     protected double[] learnAutoencoder(int inputSize, int hiddenSize){
         BasicNetwork encoder = new BasicNetwork()
         encoder.addLayer(new BasicLayer(null, false, inputSize))
-        encoder.addLayer(new BasicLayer(Changable.activationFunction(), true, hiddenSize))
-        encoder.addLayer(new BasicLayer(Changable.activationFunction(), true, inputSize))
+        encoder.addLayer(new BasicLayer(Changable.activationFunction, true, hiddenSize))
+        encoder.addLayer(new BasicLayer(Changable.activationFunction, true, inputSize))
         encoder.structure.finalizeStructure()
         learner.learnWithBackprop(encoder, layerOutputs.last() as double[][], layerOutputs.last() as double[][], epochs, l2Lambda)
 //        learner.learnWithBackprop(encoder, new DataSet(layerOutputs.last(), layerOutputs.last()), epochs, l2Lambda)
@@ -93,7 +93,7 @@ class Stacker implements Runnable{
     protected double[] learnLastLayer(){
         BasicNetwork perceptron = new BasicNetwork()
         perceptron.addLayer(new BasicLayer(null, false, hiddenSize(layerCount-3)))
-        perceptron.addLayer(new BasicLayer(Changable.activationFunction(), true, dataSet.outputSize()))
+        perceptron.addLayer(new BasicLayer(Changable.activationFunction, true, dataSet.outputSize()))
         perceptron.structure.finalizeStructure()
 //        log.info layerOutputs.toString()
 //        log.info layerOutputs.last().toString()
@@ -176,11 +176,11 @@ class Stacker implements Runnable{
         (layerCount - 2).times {
             log.info "Adding hidden layer #$it"
             layerSizes << hiddenSize(it)
-            resultNetwork.addLayer(new BasicLayer(Changable.activationFunction(), true, layerSizes[-1]))
+            resultNetwork.addLayer(new BasicLayer(Changable.activationFunction, true, layerSizes[-1]))
         }
         log.info "Adding output layer"
         layerSizes << dataSet.outputSize()
-        resultNetwork.addLayer(new BasicLayer(Changable.activationFunction(), true, layerSizes[-1]))
+        resultNetwork.addLayer(new BasicLayer(Changable.activationFunction, true, layerSizes[-1]))
         log.info "Finalizing"
         resultNetwork.structure.finalizeStructure()
         resultNetwork.layerCount.times {
