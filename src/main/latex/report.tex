@@ -62,6 +62,39 @@ Algorytmy ewolucyjne to rodzina heurystyk naśladujących proces ewolucji w celu
 
 \section{Particle Swarm Optimization}
 
+Kolejna heurystyką wzorowaną na naturze jest optymalizacja za pomocą roju cząsteczek (\textit{ang. Particle Swarm Optimization, PSO}). Zainspirowana została ona przez obserwację zachowań stad zwierząt, w szczególności ptaków i owadów. Jej celem jest osiągnięcie inteligencji obliczeniowej poprzez wykorzystanie analogii interakcji społecznych w przeciwieństwie do odwzorowywania zdolności kognitywnych jednostki \cite{poli2007particle}. 
+
+W metodzie PSO pewna liczba bytów (cząsteczek) jest umieszczana w D-wymiarowej przestrzeni rozwiązań rozważanego problemu. Każda z takich pozycji reprezentuje jedno z możliwych rozwiązań. Następnie każda cząsteczka ewaluuje optymalizowaną funkcję celu w swojej obecnej pozycji. W kolejnym, kluczowym, kroku działania heurystyki dla wszystkich cząsteczek obliczany jest wektor przemieszczenia na podstawie rozwiązania obecnego, najlepszych rozwiązań znalezionych zarówno przez obecnie rozważany byt jak i przez cały rój oraz pewnego czynnika losowego. Po przemieszczeniu wszystkich cząsteczek rozpoczyna się kolejna iteracja. W miarę upływu czasu cały rój, analogicznie do stada ptaków wspólnie poszukujących pożywienia, zbliży się do globalnego optimum funkcji celu. Metoda kończy swoje działanie gdy osiągnięty zostanie warunek stopu, w najprostszym przypadku reprezentowany przez limit liczby iteracji. 
+
+Każda cząsteczka modelowana jest jako 3 wektory D-wymiarowe, gdzie D jest liczbą wymiarów przeszukiwanej przestrzeni rozwiązań:
+
+\begin{itemize}
+\item $\vec{x}_{i}$ - obecna pozycja,
+\item $\vec{p}_{i}$ - historycznie najlepsza pozycja
+\item $\vec{v}_{i}$ - prędkość
+\end{itemize}
+
+Obecna pozycja $\vec{x}_{i}$ może być rozumiana jako współrzędne reprezentujące pozycję w przestrzeni. W każdej iteracji algorytmu obecna pozycja jest ewaluowana jako możliwe rozwiązanie problemu. Jeśli ta pozycja okaże się lepsza od wszystkich znalezionych wcześniej, to jej koordynaty zapisywane są w wektorze $\vec{p}_{i}$, a wartość funkcji celu w zmiennej $pbest_{i}$. Celem jest odszukiwanie coraz lepszych pozycji i aktualizowanie $\vec{p}_{i}$ oraz $pbest_{i}$. Nowa pozycja obliczana jest poprzez dodanie wektora prędkości $\vec{v}_{i}$ do pozycji $\vec{x}_{i}$ i algorytm działa poprzez modyfikację $\vec{v}_{i}$.
+
+Rój cząsteczek stanowi coś więcej niż tylko kolekcję pojedynczych cząsteczek. Pojedynczy byt nie posiada niemalże żadnych możliwości rozwiązania zadanego problemu, rozwój odbywa się poprzez interakcję cząsteczek. Byty ułożone są według pewnej topologii komunikacji w sąsiedztwa \cite{kennedy2010particle}. Najprostszym wariantem jest sąsiedztwo globalne, w którym wszystkie cząsteczki mogą się ze sobą komunikować. 
+
+W procesie optymalizacji rojem cząsteczek prędkość każdego z bytów jest iteratywnie modyfikowana tak, by cząsteczki stochastycznie oscylowały wokół pozycji $\vec{p}_{i}$ oraz $\vec{p}_{g}$, gdzie $\vec{p}_{g}$ oznacza najlepsze rozwiązanie znalezione przez byty należące do sąsiedztwa rozważanej cząstki $i$.
+
+Modyfikacja wektora prędkości odbywa się według wzoru przedstawionego w równaniu \eqref{eq:pso_v} \cite{poli2007particle}.
+
+\begin{equation}
+\label{eq:pso_v}
+\vec{v}_{i} = \vec{rand}(0, \varPhi_{1}) \otimes (\vec{p}_{i} - \vec{x}_{i}) + \vec{rand}(0, \varPhi_{2}) \otimes (\vec{p}_{g} - \vec{x}_{i})
+\end{equation}
+
+Notacja:
+
+\begin{itemize}
+\item $\vec{rand}(0, \varPhi_{i})$ oznacza wektor losowych liczb równomiernie rozłożonych na $[0, \varPhi_{i}]$. Jest on generowany losowo w każdej iteracji i dla każdej cząsteczki
+\item $\otimes$ \todo{Jak się nazywa ten iloczyn? mnożymy kolejne elementy wektorów...}
+\item $\varPhi_{i}$ oznacza siłę wpływu czynnika losowego na poruszanie się cząsteczek
+\end{itemize}
+
 \chapter{Zaproponowane rozwiązanie}
 
 \chapter{Badania}

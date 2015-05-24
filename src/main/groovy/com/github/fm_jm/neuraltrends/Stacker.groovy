@@ -32,7 +32,7 @@ class Stacker implements Runnable{
     final DataSet dataSet = DataLoader.getDataSet(foldNo, DataSet.Type.TRAIN)
     final BasicNetwork resultNetwork = new BasicNetwork()
     @Lazy LayerLearner learner = new LayerLearner(batchSize)
-    static final double multiplier = 3.0
+    static final double multiplier = 1.5
     final double q = Math.pow(
         dataSet.outputSize() / (multiplier * dataSet.inputSize()),
         1.0/(layerCount-2)

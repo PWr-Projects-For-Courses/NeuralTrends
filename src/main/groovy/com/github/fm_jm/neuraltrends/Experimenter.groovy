@@ -10,10 +10,11 @@ heuristics = ["ea", "pso"]
 foldNos = Changable.folds
 generations = [0, 100, 200, 500]
 populations = [100, 200, 500]
-epochs = [0, 50, 100, 150]
+//epochs = [0, 50, 100, 150]
+epochs = [0]
 crossRates = [0.5, 0.75, 0.9]
 
-creatorParams = [lowerBound: 0, upperBound: 3, lowerMutator: 0.8 as double, upperMutator: 1.2 as double]
+creatorParams = [lowerBound: Double.MIN_VALUE, upperBound: Double.MAX_VALUE, lowerMutator: 0.8 as double, upperMutator: 1.2 as double]
 l2lambda = 0.1
 
 foldNos.each {int foldNo ->
