@@ -15,7 +15,7 @@ repositories {
 
 }
 
-mainClassName = "com.github.fm_jm.neuraltrends.ParallelExperimenter"
+mainClassName = "com.github.fm_jm.neuraltrends.ParallelExperimenterNew"
 
 dependencies {
     // Common dependencies
