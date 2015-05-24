@@ -13,8 +13,8 @@ class WeightsCreator implements Creator<DoubleGenotype>{
         int size = Placeholder.instance.local.creator.size
         double[] prototype = Placeholder.instance.local.prototype
         log.trace "New prototype: $prototype"
-        double lowerBound = Placeholder.instance.local.creator.lowerBound ?: Double.MIN_VALUE
-        double upperBound = Placeholder.instance.local.creator.upperBound ?: Double.MAX_VALUE
+        double lowerBound = Placeholder.instance.local.creator.lowerBound ?: Integer.MIN_VALUE
+        double upperBound = Placeholder.instance.local.creator.upperBound ?: Integer.MAX_VALUE
         double lowerMutator = Placeholder.instance.local.creator.lowerMutator ?: 0.8
         double upperMutator = Placeholder.instance.local.creator.upperMutator ?: 1.2
         Random random = new Random()

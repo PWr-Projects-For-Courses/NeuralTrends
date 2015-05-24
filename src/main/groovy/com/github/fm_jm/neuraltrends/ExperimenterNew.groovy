@@ -13,7 +13,7 @@ populations = [100, 200, 500]
 epochs = [0, 1000, 2000, 3000]
 crossRates = [0.5, 0.75, 0.9]
 
-creatorParams = [lowerBound: Double.MIN_VALUE, upperBound: Double.MAX_VALUE, lowerMutator: 0.8 as double, upperMutator: 1.2 as double]
+creatorParams = [lowerBound: Integer.MIN_VALUE, upperBound: Integer.MAX_VALUE, lowerMutator: 0.8 as double, upperMutator: 1.2 as double]
 l2lambda = 0.1
 
 foldNos.each {int foldNo ->
