@@ -67,7 +67,7 @@ class LayerLearner {
             log.info "Batch ${batchNo+1}/$batchesToGo eval: ${eval}"
             backprop.finishTraining()
         }
-        def eval = MeasureCalculator.squaredError(outputs, BasicNetworkCategory.activateNoThreshold(network, inputs))
+//        def eval = MeasureCalculator.squaredError(outputs, BasicNetworkCategory.activateNoThreshold(network, inputs))
     }
 
     void runHeuristic(BasicNetwork network, OptimizerModule heuristic){
@@ -124,7 +124,10 @@ class LayerLearner {
         }
         Placeholder.instance.local.creator.size = prototype.size()
         log.info "prototype size: ${Placeholder.instance.local.creator.size}"
-        Placeholder.instance.local.prototype = prototype
+        if (prototype.any())
+            Placeholder.instance.local.prototype = prototype
+        else
+            Placeholder.instance.local.prototype = null
         runHeuristic(network, heuristic)
         Placeholder.instance.local.prototype = null
     }
