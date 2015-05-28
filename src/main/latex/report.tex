@@ -13,6 +13,9 @@
 \usepackage{colortbl}
 \usepackage{lscape}
 
+\usepackage{tabularx}
+\usepackage{nicefrac}
+
 \usepackage{algpseudocode}
 \usepackage[chapter]{algorithm}
 
@@ -39,9 +42,9 @@ Your abstract goes here...
 
 \tableofcontents
 
-\chapter{Wstęp (F)}
+\chapter{Wstęp}
 
-Niniejszy raport jest podsumowaniem projektu którego temat brzmiał "Techniki heurystycznego uczenia warstw ukrytych w sieci głębokiej". Od czytelnika oczekuje się podstawowej znajomości dziedziny sieci neuronowych i obliczeń miękkich. Bardziej szczegółowy opis zastosowanych technik znajduje się w rozdziale \ref{chap:introduction}.
+Niniejszy raport jest podsumowaniem projektu którego temat brzmiał ,,Techniki heurystycznego uczenia warstw ukrytych w sieci głębokiej''. Od czytelnika oczekuje się podstawowej znajomości dziedziny sieci neuronowych i obliczeń miękkich. Bardziej szczegółowy opis zastosowanych technik znajduje się w rozdziale \ref{chap:introduction}.
 
 Pierwotnym celem projektu było zbadanie alternatywnego podejścia do uczenia sieci głębokich. Miało ono polegać na zbudowaniu stosu autokoderów (opisanych w sekcji \ref{sec:autoencoders}), uczonych w dwóch krokach. Pierwszym z nich miała być zastosowanie popularnej metody propagacji wstecznej. Niestandardową częścią uczenia był krok drugi, polegający na wykorzystaniu heurystyk optymalizacyjnych (konkretnie algorytmów ewolucyjnych i rojowych) w celu poprawienia jakości działania wstępnie wyuczonej sieci.
 
@@ -129,7 +132,7 @@ Notacja:
 
 %co robimy teraz, konkretnie
 
-Pierwotnym celem projektu, którego podsumowaniem jest ten raport, było zbadanie skuteczności stosu autokoderów w problemie opisywania obiektów przy uczeniu z wykorzystaniem heurystyk oraz propagacji wstecznej. Już na wczesnym etapie wykonywania badań stwierdzono jednak, iż problemy występujące w stosowanych rozwiązaniach uniemożliwiają uzyskanie miarodajnych wyników. Zdecydowano się tym samym na zmianę celu wykonywania projektu i idei badań. 
+Pierwotnym celem projektu było zbadanie skuteczności stosu autokoderów w problemie opisywania obiektów przy uczeniu z wykorzystaniem heurystyk oraz propagacji wstecznej. Już na wczesnym etapie wykonywania badań stwierdzono jednak, iż problemy występujące w stosowanych rozwiązaniach uniemożliwiają uzyskanie miarodajnych wyników. Zdecydowano się tym samym na zmianę celu wykonywania projektu i idei badań. 
 
 W rozdziale tym opisano powody zmiany celu pracy oraz przedstawiono nowy cel.
 
@@ -180,13 +183,60 @@ Autokoder uczony jest z pomocą propagacji wstecznej z zastosowaniem regularyzac
 
 W pierwszej kolejności autokoder jest uczony za pomocą algorytmu propagacji wstecznej przez pewną liczbę epok uczenia, która jest jednym z badanych parametrów. Następnie wszystkie wagi takiej sieci, zarówno te pomiędzy warstwą wejściową i ukrytą, jak i te między warstwą ukrytą a wyjściową, zbierane są do pojedynczego wektora wartości liczbowych. Wektor taki jest następnie wykorzystywany w heurystykach jako genom, czyli reprezentacja osobnika. Ocena konkretnego rozwiązania podczas optymalizacji heurystycznej jest dokonywana przez zbudowanie sieci na podstawie zadanych wag, wykorzystanie jej do kompresji i rekonstrukcji danych treningowych oraz obliczenie błędu średniokwadratowego uzyskanej rekonstrukcji. 
 
-\chapter{Badania(F)}
+\chapter{Badania}
 
 \section{Protokół badawczy}
 
-experimenter new
+W kolejnych rozdziałach przedstawiono 
 
-kroswalidacja
+\subsection{Zbiór danych i walidacja krzyżowa}
+
+Autorzy zbioru \emph{emotions} \cite{alcala2010keel} prócz tego, że udostępnili go w całości, dostarczyli również 5 par jego podzbiorów (zbioru treningowego i testowego), podzielonych zgodnie z zasadą walidacji krzyżowej. Każdy z opisywanych poniżej eksperymentów został wykonany dla każdej z tych par.
+
+\subsection{Zbadane parametry}
+
+W tabeli \ref{table:params} zostały przedstawione zakresy badanych parametrów.
+
+W przypadku korzystania z algorytmu ewolucyjnego używano prawdopodobieństwa mutacji dobieranego automatycznie przez bibliotekę \emph{Opt4J}.
+
+Eksperymenty wykonano dla każdej kombinacji wykorzystywanych parametrów.
+
+\begin{table}[H]
+	\caption{Zakresy badanych parametrów \label{table:params}}
+	\begin{tabularx}{\linewidth}{|X|c|X|}
+		\hline
+		\textbf{Parametr} & \textbf{Zakres wartości} & Znaczenie parametru\\
+		\hline \hline
+		Liczba epok & $[0, 1000, 2000, 3000]$ & Łączna liczba epok propagacji wstecznej\footnotemark[1]. Jeśli wartość tego parametru wynosiła 0, to technika ta w ogóle nie była stosowana. \\
+		\hline
+		Liczba iteracji & $[0, 100, 200, 500]$ & Ilość pokoleń w algorytmie ewolucyjnym lub iteracji w algorytmie rojowym. Jeśli wartość tego parametru wynosiła 0, to heurystyka w ogóle nie była używana w procesie uczenia. \\
+		\hline
+		Rozmiar populacji & $[100, 200, 500]$ &  Ilość rozwiązań przetwarzanych przez heurystykę w ramach jednej iteracji. Zarówno PSO jak i EA są heurystykami populacyjnymi, więc mimo różnego nazewnictwa, obie są parametryzowane tą wartością. Jeśli liczba iteracji wynosiła 0, to ten parametr nie był używany. \\
+		\hline
+		Prawdopodobieństwo krzyżowania & $[0.5, 0.75, 0.9]$	& Parametr używany jedynie w sytuacji, w której korzystaliśmy z algorytmu ewolucyjnego. Określa prawdopodobieństwo tego, że losowy osobnik z populacji weźmie udział w operacji krzyżowania. \\
+		\hline
+	\end{tabularx}
+\end{table}
+
+\footnotetext[1]{Naukę propagacją wsteczną prowadzono paczkami po 50 instancji uczących, co dla zbioru uczącego dawało 10 paczek. Wartość tego parametru to liczba epok wykonana dla wszystkich paczek. Innymi słowy, przy użyciu każdej z nich wykonywano \nicefrac{1}{10} wszystkich epok. }
+
+\section{Realizacja technik uczenia}
+
+Przy korzystaniu z propagacji wstecznej korzystano z regularyzacji L2 \cite{girosi1995regularization} ze współczynnikiem 0.1. Miało to na celu wymuszenie kodowania rzadkiego w autokoderze \cite{ngiam2011optimization}.
+
+Obie heurystyki służyły do dobrania jak najlepszych wag w pojedynczym autokoderze. Zestawy wag były reprezentowane jako wektory liczb zmiennoprzecinkowych, będące połączonymi wektorami wag między warstwą ukrytą, a wejściową oraz wyjściową, a ukrytą. Wagi były uporządkowane w wektorze w następujący sposób:
+
+\begin{displaymath}
+	[ h_{0, 0}, h_{0, 1}, \ldots, h_{1, 0}, h_{1, 1}, \ldots, o_{0, 0}, o_{0, 1}, \ldots, o_{1, 0}, o_{1, 1}, \ldots ]
+\end{displaymath}
+
+gdzie $h_{i, j}$ oznacza wagę połączenia między $i$tym neuronem warstwy ukrytej i $j$tym neuronem warstwy wejściowej, a $o_{i, j}$ analogiczną wagę między warstwą wyjściową i ukrytą.
+
+Początkowy zbiór rozwiązań dla każdej z heurystyk uzyskiwano poprzez losową modyfikację rozwiązania uzyskanego przez zastosowanie propagacji wstecznej. Jeśli technika ta nie była stosowana, to rozwiązania były generowane losowo, przez wybranie losowych wag z przedziału $\left\langle -\infty, \infty \right\rangle $. Sama modyfikacja polegała na przemnożeniu każdej wagi przez losowy współczynnik z zakresu $\left\langle 0.8, 1.2 \right\rangle $, wybierany według rozkładu równomiernego.
+
+Użyto standardowych operatorów genetycznych dla osobników reprezentowanych przez wektory liczbowe. Operator mutacji modyfikował losowe pozycje w wektorze przez dodanie do nich losowych wartości. Operator krzyżowania został zaimplementowany jako proste krzyżowanie jednopunktowe.
+
+Funkcją oceny używaną w heurystykach optymalizacyjnych był błąd średniokwadratowy rekonstrukcji całego zbioru treningowego.
 
 \section{Wyniki}
 
