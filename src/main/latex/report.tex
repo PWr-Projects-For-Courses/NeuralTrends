@@ -41,13 +41,13 @@ Your abstract goes here...
 
 \chapter{Wstęp (F)}
 
-ąężźćółń \cite{belew1990evolving} \cite{kennedy2010particle}
+Niniejszy raport jest podsumowaniem projektu którego temat brzmiał "Techniki heurystycznego uczenia warstw ukrytych w sieci głębokiej". Od czytelnika oczekuje się podstawowej znajomości dziedziny sieci neuronowych i obliczeń miękkich. Bardziej szczegółowy opis zastosowanych technik znajduje się w rozdziale \ref{chap:introduction}.
 
-założenie: czytelnik wie, opisane pokróTce w nast
+Pierwotnym celem projektu było zbadanie alternatywnego podejścia do uczenia sieci głębokich. Miało ono polegać na zbudowaniu stosu autokoderów (opisanych w sekcji \ref{sec:autoencoders}), uczonych w dwóch krokach. Pierwszym z nich miała być zastosowanie popularnej metody propagacji wstecznej. Niestandardową częścią uczenia był krok drugi, polegający na wykorzystaniu heurystyk optymalizacyjnych (konkretnie algorytmów ewolucyjnych i rojowych) w celu poprawienia jakości działania wstępnie wyuczonej sieci.
 
-cel był taki siaki, nie pykło, patrz rozdzial
+Zamierzenia tego nie udało się zrealizować, czego powody zostały opisane w rozdziale \ref{chapter:david-bowie}. Aby w ramach tego projektu odkryć nową wiedzę nt. sieci neuronowych i ich uczenia, zdecydowano się na zmianę tematu.
 
-cel jest teraz taki
+Nowym celem projektu zostało zbadanie jakości uczenia pojedynczego autokodera przy użyciu podejścia heurystycznego i mieszanego. Wyniki dla alternatywnych metod nauki porównano z klasyczną metodą propagacji wstecznej.
 
 \chapter{Wprowadzenie}
 \label{chap:introduction}
@@ -57,7 +57,7 @@ W rozdziale tym opisano zagadnienia i podejścia wykorzystywane podczas realizac
 \section{Autokodery i stosy autokoderów}
 \label{sec:autoencoders}
 
-Autokodery (\textit{ang. autoencoders}) stanowią jedną istniejących architektur głębokich sieci neuronowych. Znajdują one zastosowanie zarówno w redukcji wymiarowości danych jak i w odnajdywaniu wewnętrznej, ukrytej reprezentacji tych danych. 
+Autokodery (\textit{ang. autoencoders}) stanowią jedną z istniejących architektur głębokich sieci neuronowych. Znajdują one zastosowanie zarówno w redukcji wymiarowości danych jak i w odnajdywaniu ich wewnętrznej, ukrytej reprezentacji. 
 
 Pojedynczy autokoder jest trójwarstwową siecią neuronową, której celem jest odtwarzanie na wyjściu danych zadanych na wejściu \cite{hinton2006reducing}. W związku z tym rozmiar warstwy wyjściowej jest równy rozmiarowi warstwy wejściowej. Rozmiar warstwy ukrytej zależy od przeznaczenia projektowanego autokodera -- wykorzystanie warstwy mniejszej od warstwy wejściowej skutkuje otrzymaniem sieci potrafiącej zredukować wymiarowość danych, co może być także wykorzystane do zadania kompresji. Gdy warstwa ukryta jest większa, to sieć taka powinna nauczyć się wewnętrznej reprezentacji danych.
 
@@ -120,6 +120,8 @@ Notacja:
 \end{itemize}
 
 \chapter{Powody zmiany celu}
+
+\label{chapter:david-bowie} %ch-ch-ch-chaaaangeees...
 
 %jak miało być, co miało być badane
 
