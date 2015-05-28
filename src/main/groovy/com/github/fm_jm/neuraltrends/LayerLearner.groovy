@@ -53,7 +53,7 @@ class LayerLearner {
             )
             backprop.addStrategy(new RegularizationStrategy(l2Lambda))
             epochsToGo.times { int epoch ->
-                log.info("Batch ${batchNo+1}/$batchesToGo; epoch ${epoch+1}/$epochsToGo, error ${backprop.error}")
+//                log.info("Batch ${batchNo+1}/$batchesToGo; epoch ${epoch+1}/$epochsToGo, error ${backprop.error}")
                 backprop.iteration()
             }
             def out = BasicNetworkCategory.activateNoThreshold(
