@@ -50,8 +50,26 @@ cel był taki siaki, nie pykło, patrz rozdzial
 cel jest teraz taki
 
 \chapter{Wprowadzenie}
+\label{chap:introduction}
+
+W rozdziale tym opisano zagadnienia i podejścia wykorzystywane podczas realizacji projektu, którego podsumowaniem jest ten raport. Przyjęto założenie, że czytelnik jest zaznajomiony z podstawowymi pojęciami dotyczącymi zagadnienia sieci neuronowych, takimi jak pojęcie warstw wejściowych, ukrytych i wyjściowych, algorytm propagacji wstecznej bądź wagi pomiędzy neuronami. Skupiono się tutaj na zagadnieniach stanowiących nowości w dziedzinie oraz takich spoza dziedziny obliczeń neuronowych.
 
 \section{Autokodery i stosy autokoderów}
+\label{sec:autoencoders}
+
+Autokodery (\textit{ang. autoencoders}) stanowią jedną istniejących architektur głębokich sieci neuronowych. Znajdują one zastosowanie zarówno w redukcji wymiarowości danych jak i w odnajdywaniu wewnętrznej, ukrytej reprezentacji tych danych. 
+
+Pojedynczy autokoder jest trójwarstwową siecią neuronową, której celem jest odtwarzanie na wyjściu danych zadanych na wejściu \cite{hinton2006reducing}. W związku z tym rozmiar warstwy wyjściowej jest równy rozmiarowi warstwy wejściowej. Rozmiar warstwy ukrytej zależy od przeznaczenia projektowanego autokodera -- wykorzystanie warstwy mniejszej od warstwy wejściowej skutkuje otrzymaniem sieci potrafiącej zredukować wymiarowość danych, co może być także wykorzystane do zadania kompresji. Gdy warstwa ukryta jest większa, to sieć taka powinna nauczyć się wewnętrznej reprezentacji danych.
+
+Wykorzystanie pojedynczego autokodera do znacznej redukcji wymiarowości danych jest jednak nieefektywne. Gdy różnica pomiędzy rozmiarami warstwy wejściowej a warstwy ukrytej jest zbyt duża, to nauczenie sieci poprawnego odtwarzania tak mocno zredukowanych wzorców jest trudne. Rozwiązaniem tego problemu jest idea stosu autokoderów. Polega ona na zbudowaniu sieci neuronowej z większa liczbą warstw ukrytych, gdzie kolejne warstwy mają coraz mniejsze rozmiary. Różnica rozmiarów pomiędzy kolejnymi warstwami jest tym samym mniejsza.
+
+Aby wykorzystać stos autokoderów do odtwarzania należy utworzyć sieć zawierająca nieparzystą liczbę warstw ukrytych, których rozmiary są symetryczne. Dzięki temu można wskazać na środkową warstwę ukrytą, najmniejszą ze wszystkich, zawierającą zredukowane dane. Warstwę taką nazywa się warstwą kodu. Warstwy leżące pomiędzy warstwą wejściową, a warstwą kodu, włącznie z wymienionymi, nazywa się koderem (\textit{ang. encoder}). Dekoder (\textit{ang. decoder}) zaś stanowią warstwy od warstwy kodu do warstwy wyjściowej.
+
+Zarówno pojedyncze autokodery jak ich stosy można uczyć za pomocą propagacji wstecznej za błąd przyjmując dowolną funkcję rozbieżności danych wejściowych i wyjściowych, jak na przykład błąd średniokwadratowy. Uczenie sieci z dużą liczbą warstw ukrytych za pomocą propagacji wstecznej jest jednak nieefektywne \cite{hinton2006reducing} z powodu dyfuzji gradientu. Aby rozwiązać ten problem stosowane jest podejście znane z sieci DBN (\textit{Deep Belief Network}) \cite{le2008representational}. Polega ono na oddzielnym uczeniu pojedynczych, trójwarstwowych, autokoderów. 
+
+W każdym etapie takiej nauki autokoder uczony jest odtwarzać dane zadane na wejściu nie zważając na resztę sieci. Wejściem warstwy $n$ jest jednak wyjście warstwy $n-1$. Tym samym pierwsza warstwa ukryta uczona jest rekonstrukcji danych z warstwy wejściowej całej sieci. Aby było to możliwe należy utworzyć jeszcze jedną warstwę o rozmiarze takim samym jak warstwa wejściowa. Po zakończeniu nauki pojedynczej warstwy odłączana jest dodana wcześniej warstwa wykorzystywana podczas nauki. Już nauczone wagi między warstwą wejściową a ukrytą są zapamiętywane. Następnie algorytm zaczyna naukę kolejnej warstwy, która tym razem musi nauczyć się rekonstrukcji danych uzyskanych z wcześniejszej warstwy ukrytej.
+
+Poza kompresją i redukcją wymiarowości danych stosy autokoderów znajdują także zastosowanie w innych zadaniach z dziedziny maszynowego uczenia, takich jak rozpoznawanie czy opisywanie. Czyni się to poprzez eliminację warstw stanowiących dekoder, zamiast nich dołączając po warstwie kodu algorytm odpowiedni do rozważanego zadania. Może to być przykładowo klasyfikator, także w formie perceptronu zachowując tym samym neuronową naturę stosowanego rozwiązania. Algorytm taki operuje na danych o zredukowanej wymiarowości stanowiących swego rodzaju wewnętrzną reprezentację oryginalnych danych. 
 
 \section{Algorytmy genetyczne}
 
@@ -76,8 +94,8 @@ Każda cząsteczka modelowana jest jako 3 wektory D-wymiarowe, gdzie D jest licz
 
 \begin{itemize}
 \item $\vec{x}_{i}$ - obecna pozycja,
-\item $\vec{p}_{i}$ - historycznie najlepsza pozycja
-\item $\vec{v}_{i}$ - prędkość
+\item $\vec{p}_{i}$ - historycznie najlepsza pozycja,
+\item $\vec{v}_{i}$ - prędkość.
 \end{itemize}
 
 Obecna pozycja $\vec{x}_{i}$ może być rozumiana jako współrzędne reprezentujące pozycję w przestrzeni. W każdej iteracji algorytmu obecna pozycja jest ewaluowana jako możliwe rozwiązanie problemu. Jeśli ta pozycja okaże się lepsza od wszystkich znalezionych wcześniej, to jej koordynaty zapisywane są w wektorze $\vec{p}_{i}$, a wartość funkcji celu w zmiennej $pbest_{i}$. Celem jest odszukiwanie coraz lepszych pozycji i aktualizowanie $\vec{p}_{i}$ oraz $pbest_{i}$. Nowa pozycja obliczana jest poprzez dodanie wektora prędkości $\vec{v}_{i}$ do pozycji $\vec{x}_{i}$ i algorytm działa poprzez modyfikację $\vec{v}_{i}$.
@@ -86,34 +104,87 @@ Rój cząsteczek stanowi coś więcej niż tylko kolekcję pojedynczych cząstec
 
 W procesie optymalizacji rojem cząsteczek prędkość każdego z bytów jest iteratywnie modyfikowana tak, by cząsteczki stochastycznie oscylowały wokół pozycji $\vec{p}_{i}$ oraz $\vec{p}_{g}$, gdzie $\vec{p}_{g}$ oznacza najlepsze rozwiązanie znalezione przez byty należące do sąsiedztwa rozważanej cząstki $i$.
 
-Modyfikacja wektora prędkości odbywa się według wzoru przedstawionego w równaniu \eqref{eq:pso_v} \cite{poli2007particle}.
+Modyfikacja wektora prędkości odbywa się według wzoru przedstawionego w równaniu \eqref{eq:pso_v} \cite{poli2007particle}:
 
 \begin{equation}
 \label{eq:pso_v}
-\vec{v}_{i} = \vec{rand}(0, \varPhi_{1}) \otimes (\vec{p}_{i} - \vec{x}_{i}) + \vec{rand}(0, \varPhi_{2}) \otimes (\vec{p}_{g} - \vec{x}_{i})
+\vec{v}_{i} = \vec{rand}(0, \varPhi_{1}) \otimes (\vec{p}_{i} - \vec{x}_{i}) + \vec{rand}(0, \varPhi_{2}) \otimes (\vec{p}_{g} - \vec{x}_{i}).
 \end{equation}
 
 Notacja:
 
 \begin{itemize}
-\item $\vec{rand}(0, \varPhi_{i})$ oznacza wektor losowych liczb równomiernie rozłożonych na $[0, \varPhi_{i}]$. Jest on generowany losowo w każdej iteracji i dla każdej cząsteczki
-\item $\otimes$ oznacza operację mnożenia wektorów zdefiniowaną w następujący sposób: $[x_0, x_1, \ldots, x_n] \otimes [y_0, y_1, \ldots, y_n] = [x_0 y_0,  x_1 y_1, \ldots, x_n y_n]$
-\item $\varPhi_{i}$ oznacza siłę wpływu czynnika losowego na poruszanie się cząsteczek
+\item $\vec{rand}(0, \varPhi_{i})$ oznacza wektor losowych liczb równomiernie rozłożonych na $[0, \varPhi_{i}]$. Jest on generowany losowo w każdej iteracji i dla każdej cząsteczki,
+\item $\otimes$ oznacza operację mnożenia wektorów zdefiniowaną w następujący sposób: $[x_0, x_1, \ldots, x_n] \otimes [y_0, y_1, \ldots, y_n] = [x_0 y_0,  x_1 y_1, \ldots, x_n y_n]$,
+\item $\varPhi_{i}$ oznacza siłę wpływu czynnika losowego na poruszanie się cząsteczek.
 \end{itemize}
 
 \chapter{Powody zmiany celu}
 
-jak miało być, co miało być badane
+%jak miało być, co miało być badane
 
-co i czemu nei pykło
+%co i czemu nei pykło
 
-co robimy teraz, konkretnie
+%co robimy teraz, konkretnie
+
+Pierwotnym celem projektu, którego podsumowaniem jest ten raport, było zbadanie skuteczności stosu autokoderów w problemie opisywania obiektów przy uczeniu z wykorzystaniem heurystyk oraz propagacji wstecznej. Już na wczesnym etapie wykonywania badań stwierdzono jednak, iż problemy występujące w stosowanych rozwiązaniach uniemożliwiają uzyskanie miarodajnych wyników. Zdecydowano się tym samym na zmianę celu wykonywania projektu i idei badań. 
+
+W rozdziale tym opisano powody zmiany celu pracy oraz przedstawiono nowy cel.
+
+\section{Pierwotny cel}
+
+Pierwotnym celem było zastosowanie głębokich stosów autokoderów z dodaną warstwą klasyfikującą w postaci perceptronu do problemu opisywania obiektów. Dla przypomnienia: zadanie opisywania, znane także jako klasyfikacja wieloklasowa, polega na przypisaniu obiektowi na podstawie jego obserwacji pewnego podzbioru etykiet ze ściśle ustalonego zbioru. Najbardziej oczywistym przykładem takiego problemu jest zagadnienie opisywania obrazów, czyli określenia, jakie obiekty występują na obrazie i przypisanie mu etykiet odpowiadających tym obiektom. 
+
+Uczenie głębokich sieci neuronowych z pomocą algorytmu propagacji wstecznej jest bardzo czasochłonne, szczególnie gdy wykorzystywane jest podejście do zachłannego uczenia poszczególnych warstw opisane w sekcji \ref{sec:autoencoders}. Pierwotnym celem było wykorzystanie podejść heurystycznych oraz mieszanych (wykorzystujących zarówno propagację wsteczną jak i heurystyki) celem przyspieszenia procesu nauki sieci oraz zwiększenia jej skuteczności w problemie rozpoznawania. Skuteczność tak uczonych sieci (reprezentowana przez miarę F) miała zostać porównana z sieciami uczonymi jedynie z pomocą propagacji wstecznej.
+
+Wykorzystane miało zostać podejście oparte o uczenie zachłanne -- pojedyncze autokodery były uczone indywidualnie, ale po pewnej liczbie epok propagacji wstecznej (także zerowej) wykorzystywano podejście oparte o heurystykę do dalszej optymalizacji wag. W analogiczny sposób uczona była warstwa ostatnia, klasyfikująca.
+
+Przykład opisywania obrazów został wcześniej podany nie bez powodu -- zamierzano skorzystać ze zbioru danych \textit{corel5k} \cite{alcala2010keel} reprezentującego właśnie problem opisywania obrazów.
+
+\section{Napotkane problemy}
+
+Zamierzano wykorzystać zbiór danych zawierający jedynie atrybuty o wartościach binarnych, tj należących do zbioru $\lbrace 0, 1 \rbrace$. Wybrano tym samym zbiór \textit{corel5k} zawierający 5000 obiektów reprezentowanych przez 499 cech binarnych i opisanych z pomocą 374-elementowego zbioru etykiet. Szybko natknięto się jednak na ograniczenie natury technicznej -- w wykorzystywanej bibliotece do obliczeń neuronowych \textit{encog} liczba wag pomiędzy warstwami zapisywana była w zmiennej typu \textit{Integer}. Dla tak dużej liczby cech oraz połączeń typu każdy-z-każdym realna liczba wag przekraczała dopuszczalny zakres dla zmiennej tego typu.
+
+Zdecydowano się tym samym wykorzystać zbiór danych, w którym instancje opisane są z pomocą mniejszej liczby cech. Nie znaleziono jednak zbioru zawierającego mniej cech binarnych. Zrezygnowano tym samym z ograniczenia na typ cech i wykorzystano zbiór \textit{emotions} \cite{alcala2010keel} zawierający 593 obiekty reprezentowane przez 72 cechy rzeczywistoliczbowe, i opisane z pomocą 6 etykiet. Przed wykorzystaniem tych danych w sieci neuronowej wymagane było wykonanie normalizacji wartości cech, czyli takie ich przekształcenie, by mieściły się w zakresie (0, 1). Było to możliwe dzięki podanym w zbiorze danych dziedzinom kolejnych cech.
+
+Wymóg operowania na znormalizowanych danych bierze się z tego, iż w autokoderach używane były sigmoidalne funkcje aktywacji których przeciwdziedziną jest przedział (0, 1). Autokoder taki nie jest w stanie odtworzyć wartości spoza tego zakresu.
+
+Zmiana wykorzystywanego zbioru danych poskutkowała jednak tym, iż wykorzystywane autokodery miały za zadanie odtwarzać wartości rzeczywiste, co jest zadaniem trudniejszym niż odtwarzanie wartości pochodzących z dwuelementowego zbioru. Wstępne badania pokazały, że skuteczność odtwarzania takich wartości nie jest zadowalająca przy wykorzystaniu dotychczasowej architektury. Aby rozwiązać ten problem zdecydowano się wykorzystać metodę nauki paczkami (\textit{ang. batch learning}) \cite{ngiam2011optimization}. Dane używane podczas nauki podzielono na paczki zawierające nie więcej niż 50 instancji i proces nauki z wykorzystaniem propagacji wstecznej powtarzano osobno dla każdej paczki. Pozwoliło to poprawić wyniki i uzyskać zadowalającą dokładność rekonstrukcji dla pojedynczego autokodera.
+
+Niestety podczas układania autokoderów w stosy na jaw wyszedł kolejny problem. O ile pojedynczy autokoder odtwarzał zadane wartości rzeczywiste z niewielkim błędem, to w dużej mierze była to zasługa precyzyjnie dobranych wag w warstwie dekodującej. Zaobserwowano, że dla jednej zadanej instancji wszystkie neurony w warstwie kodu zapalały się dokładnie w tym samym stopniu -- ich funkcje aktywacji przyjmowały takie same wartości. Pomiędzy różnymi wektorami wartości wejściowych wartości aktywacji się od siebie różniły, ale zawsze wewnątrz jednego przykładu do rekonstrukcji wszystkie neurony przyjmowały takie same wartości. 
+
+Tym samym każdy z przykładów uczących był efektywnie reprezentowany tylko przez jedną liczbę. O ile możliwe jest nauczenie klasyfikatora korzystając z takiej reprezentacji by w miarę poprawnie opisywał obiekty należące do zbioru danych uczących, to nie oferowało to zdolności generalizacji na nieznane obiekty, czyli te wchodzące w skład zbioru testowego.
+
+Dalsza redukcja wymiarowości danych mijała się tym samym z celem. Już drugi autokoder w stosie miał bardzo proste zadanie -- odtwarzał efektywnie tylko jedną wartość zamiast wektora różnych wartości. W związku z tym aktywacje neuronów w drugiej warstwie kodu były zbliżone do zera i niezmiennie wszystkie przyjmowały takie same wartości dla jednego przypadku uczącego. 
+
+Ostateczne opisywanie w warstwie klasyfikującej wykorzystując tak ,,nauczony'' stos autokoderów okazało się gorsze od losowego -- zależnie od losowego czynnika sterującego początkowymi wagami sieci wszystkie instancje były opisywane albo wszystkimi etykietami, albo żadną z nich. Wyniki te były stałe niezależnie od użytych parametrów liczby epok propagacji wstecznej, rozmiarów oraz liczby warstw ukrytych. 
+
+Dalsze przeprowadzanie eksperymentów było tym samym bezcelowe -- na dobrą sprawę wyniki były znane jeszcze przed uruchomieniem eksperymentu.
+
+Aby praca ta jednak wnosiła wartość dodaną i dostarczała nowej wiedzy zdecydowano się na modyfikację jej celu.
+
+
+\section{Nowy cel pracy}
+
+Za nowy cel pracy przyjęto zbadanie efektywności metod heurystycznych oraz mieszanych w uczeniu pojedynczego autokodera mającego za zadanie odtwarzać wartości ciągłe z zakresu $(0, 1)$. Aby nie operować na wygenerowanych danych losowych skorzystano tutaj z danych stanowiących znormalizowane cechy obiektów z opisanego wcześniej zbioru \textit{emotions}, co pozwala ocenić skuteczność autokodera w kompresji i rekonstrukcji realnych danych. 
+
+Skupiono się tym samym na zadaniu kompresji poprzez redukcję wymiarowości. Rozmiar warstwy ukrytej ustawiono na $0,75$ rozmiaru warstwy wejściowej. Dla wykorzystanego zbioru danych rozmiar ten wynosi tym samym:
+
+\begin{equation}
+\lfloor 0,75 \times 72 \rfloor = 54 .
+\end{equation}
+
+Autokoder uczony jest z pomocą propagacji wstecznej z zastosowaniem regularyzacji L2 i uczenia za pomocą paczek oraz poprzez zastosowanie podejść heurystycznych. Użyte w badaniach heurystyki to algorytm genetyczny oraz optymalizacja roju cząsteczek. Zostały one opisane w rozdziale \ref{chap:introduction}. 
+
+W pierwszej kolejności autokoder jest uczony za pomocą algorytmu propagacji wstecznej przez pewną liczbę epok uczenia, która jest jednym z badanych parametrów. Następnie wszystkie wagi takiej sieci, zarówno te pomiędzy warstwą wejściową i ukrytą, jak i te między warstwą ukrytą a wyjściową, zbierane są do pojedynczego wektora wartości liczbowych. Wektor taki jest następnie wykorzystywany w heurystykach jako genom, czyli reprezentacja osobnika. Ocena konkretnego rozwiązania podczas optymalizacji heurystycznej jest dokonywana przez zbudowanie sieci na podstawie zadanych wag, wykorzystanie jej do kompresji i rekonstrukcji danych treningowych oraz obliczenie błędu średniokwadratowego uzyskanej rekonstrukcji. 
 
 \chapter{Badania(F)}
 
 \section{Protokół badawczy}
 
 experimenter new
+
+kroswalidacja
 
 \section{Wyniki}
 
