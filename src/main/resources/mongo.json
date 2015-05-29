@@ -1,0 +1,6 @@
+{
+  "user": "student",
+  "pass": "student",
+  "addr": "ds045679.mongolab.com:45679/neural-trends",
+  "protocol": "mongodb"
+}

@@ -73,3 +73,5 @@ Map getKey(int foldNo, int layerCount, int epochs, int generations, int populati
         heuristicParams.cross = crossRate
     [foldNo: foldNo, layers: layerCount, epochs: epochs, heuristic: heuristic, params: heuristicParams]
 }
+
+MongoWrapper.close()

@@ -4,11 +4,19 @@ import com.gmongo.GMongo
 import com.mongodb.DBCollection
 import com.mongodb.MongoURI
 
+import groovy.json.JsonSlurper
+
 
 class MongoWrapper {
 
+    static def mongo
+
+    static {
+        def loaded = new JsonSlurper().parse(MongoWrapper.classLoader.getResource("mongo.json"))
+        mongo = new GMongo(new MongoURI("${loaded.protocol}://${loaded.user}:${loaded.pass}@${loaded.addr}"))
+    }
+
     static public Map retrieve(String collection, Map key){
-        def mongo = new GMongo(new MongoURI("mongodb://student:student@ds045679.mongolab.com:45679/neural-trends"))
         def db = mongo.getDB("neural-trends")
         DBCollection col = db.getCollection(collection)
         def res = col.findOne(key)
@@ -25,7 +33,6 @@ class MongoWrapper {
     }
 
     static public List<Map> retrieveAll(String collection, Map key){
-        def mongo = new GMongo(new MongoURI("mongodb://student:student@ds045679.mongolab.com:45679/neural-trends"))
         def db = mongo.getDB("neural-trends")
         DBCollection col = db.getCollection(collection)
         def res = col.find(key)
@@ -46,7 +53,6 @@ class MongoWrapper {
 
     static public void store(String collection, Map key, Map values){
         boolean exists = exists(collection, key)
-        def mongo = new GMongo(new MongoURI("mongodb://student:student@ds045679.mongolab.com:45679/neural-trends"))
         def db = mongo.getDB("neural-trends")
         DBCollection col = db.getCollection(collection)
         col.insert(key+values)
@@ -54,11 +60,13 @@ class MongoWrapper {
     }
 
     static public boolean exists(String collection, Map key){
-        def mongo = new GMongo(new MongoURI("mongodb://student:student@ds045679.mongolab.com:45679/neural-trends"))
         def db = mongo.getDB("neural-trends")
         DBCollection col = db.getCollection(collection)
         def res = col.getCount(key)
         res != 0
     }
 
+    static void close(){
+        mongo.close()
+    }
 }

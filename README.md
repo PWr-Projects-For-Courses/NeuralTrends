@@ -18,9 +18,7 @@ Autorzy
 * Jacek Miszczak (179158)
 * Filip Malczak (179326)
 
-TODO
+UWAGA
 -----
 
-* Regularyzacja. W EncogEncoderTest masz zakomentowaną linię z przykłądem, jak użyć strategii przy uczeniu.
-  Stamtąd łatwo dojdziesz do interfejsu strategii. O samej regularyzacji:
-   http://www.cedar.buffalo.edu/~srihari/CSE574/Chap5/Chap5.5-Regularization.pdf 
+Po dniu 7.06.2015 baza danych zostanie usunięta. Jeśli chcesz odtworzyć wyniki, zmień zasób src/main/resources/mongo.json
