@@ -18,7 +18,7 @@ class Results {
         def res = MongoWrapper.retrieve(collection, key)
         if (!res)
             return null
-        new Results(key.heuristic, key.params, key.epochs, key.foldNo, key.layers, res.f, res.time)
+        new Results(res.f, res.time, key.heuristic, key.params, key.epochs, key.foldNo, key.layers)
     }
 
     public void store(String collection="results_new"){
