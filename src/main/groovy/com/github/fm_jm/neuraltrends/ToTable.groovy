@@ -4,6 +4,9 @@ import com.github.fm_jm.neuraltrends.evaluation.MongoWrapper
 import com.github.fm_jm.neuraltrends.evaluation.Results
 import org.apache.commons.math3.stat.StatUtils
 
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+
 class ToTable {
 
     static def CSV = [
@@ -19,6 +22,14 @@ class ToTable {
         separator: "&",
         newline: "\\\\"
     ]
+
+    static DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.forLanguageTag("pl_PL")).with {
+        it.decimalSeparator = ","
+        it.groupingSeparator = "."
+        it
+    }
+    static DecimalFormat resultFormat = new DecimalFormat("0.0000", symbols)
+    static DecimalFormat cpFormat = new DecimalFormat("0.00", symbols)
 
     static def characters = CSV
 
@@ -45,8 +56,8 @@ class ToTable {
 
     static Map<String, String> getStats(results){
         results ? [
-            mean: StatUtils.mean(results),
-            stdDev: Math.sqrt(StatUtils.variance(results))
+            mean: resultFormat.format(StatUtils.mean(results)),
+            stdDev: resultFormat.format(Math.sqrt(StatUtils.variance(results)))
         ] : [ mean: "N/A", stdDev: "N/A" ]
     }
 
@@ -93,7 +104,7 @@ class ToTable {
                         def stats = getStats(res.findAll().collect { it.f } as double[])
                         printer gen,
                             pop,
-                            cp,
+                            cpFormat.format(cp),
                             stats.mean, stats.stdDev
                     }
 
@@ -145,7 +156,7 @@ class ToTable {
                             printer e,
                                 gen,
                                 pop,
-                                cp,
+                                cpFormat.format(cp),
                                 stats.mean, stats.stdDev
                         }
 
