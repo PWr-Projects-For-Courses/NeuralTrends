@@ -79,7 +79,7 @@ class ToTable {
     static void ea() {
         println "EA"
         println characters.openTable
-        printer "generations", "population", "cp", "eval"
+        printer "generations", "population", "cp", "mean", "stdDev"
         int e = 0
         String h = "ea"
         generations.each { int gen ->
@@ -106,7 +106,7 @@ class ToTable {
     static void pso() {
         println "PSO"
         println characters.openTable
-        printer "generations", "population", "eval"
+        printer "generations", "population", "mean", "stdDev"
         int e = 0
         String h = "pso"
         double cp = 0
@@ -130,7 +130,7 @@ class ToTable {
     static void bp_ea() {
         println "BP+EA"
         println characters.openTable
-        printer "epochs", "generations", "population", "cp", "eval"
+        printer "epochs", "generations", "population", "cp", "mean", "stdDev"
         String h = "ea"
         generations.each{ int gen ->
             epochs.each{ int e ->
@@ -160,7 +160,7 @@ class ToTable {
     static void bp_pso() {
         println "BP+PSO"
         println characters.openTable
-        printer "epochs", "generations", "population", "eval"
+        printer "epochs", "generations", "population", "mean", "stdDev"
         String h = "pso"
         double cp = 0
         generations.each{ int gen ->
