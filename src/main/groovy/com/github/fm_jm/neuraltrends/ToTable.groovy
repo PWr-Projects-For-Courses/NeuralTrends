@@ -2,6 +2,7 @@ package com.github.fm_jm.neuraltrends
 
 import com.github.fm_jm.neuraltrends.evaluation.MongoWrapper
 import com.github.fm_jm.neuraltrends.evaluation.Results
+import org.apache.commons.math3.stat.StatUtils
 
 class ToTable {
 
@@ -28,7 +29,6 @@ class ToTable {
     }
 
     static heuristics = ["ea", "pso"]
-    static multipliers = [0.75]
     static foldNos = (1..5)
     static generations = [0, 100, 200, 500]
     static populations = [100, 200, 500]
@@ -43,25 +43,35 @@ class ToTable {
         [foldNo: foldNo, layers: 0, epochs: epochs, heuristic: heuristic, params: heuristicParams]
     }
 
+    static Map<String, String> getStats(results){
+        results ? [
+            mean: StatUtils.mean(results),
+            stdDev: Math.sqrt(StatUtils.variance(results))
+        ] : [ mean: "N/A", stdDev: "N/A" ]
+    }
+
 
     static void baseline() {
         println "Baseline"
         println characters.openTable
-        printer "epochs", "eval"
+        printer "epochs", "mean", "stdDev"
         epochs.each{ int e ->
             int gen = 0
-            if (e)
+            if (e) {
+                def res = []
                 foldNos.each { int fold ->
                     populations.each { int pop ->
                         heuristics.each { String h ->
                             (h == "ea" ? crossRates : [0]).each { cp ->
-                                Results results = Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
-                                printer e, results?.f ?: "N/A"
+                                res << Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
                             }
                         }
                     }
 
                 }
+                def stats = getStats(res.findAll().collect { it.f } as double[])
+                printer e, stats.mean, stats.stdDev
+            }
         }
         println characters.closeTable
     }
@@ -72,20 +82,23 @@ class ToTable {
         printer "generations", "population", "cp", "eval"
         int e = 0
         String h = "ea"
-        generations.each{ int gen ->
-            if (gen)
-                foldNos.each { int fold ->
-                    populations.each { int pop ->
-                        crossRates.each { cp ->
-                            Results results = Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
-                            printer gen,
-                                pop,
-                                cp,
-                                results?.f ?: "N/A"
+        generations.each { int gen ->
+            if (gen) {
+                populations.each { int pop ->
+                    crossRates.each { cp ->
+                        def res = []
+                        foldNos.each { int fold ->
+                            res << Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
                         }
+                        def stats = getStats(res.findAll().collect { it.f } as double[])
+                        printer gen,
+                            pop,
+                            cp,
+                            stats.mean, stats.stdDev
                     }
 
                 }
+            }
         }
         println characters.closeTable
     }
@@ -98,17 +111,18 @@ class ToTable {
         String h = "pso"
         double cp = 0
         generations.each{ int gen ->
-            if (gen)
-                foldNos.each { int fold ->
-                    populations.each { int pop ->
-                        Results results = Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
-                        printer gen,
-                            pop,
-                            cp,
-                            results?.f ?: "N/A"
+            if (gen) {
+                populations.each { int pop ->
+                    def res = []
+                    foldNos.each { int fold ->
+                        res << Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
                     }
-
+                    def stats = getStats(res.findAll().collect { it.f } as double[])
+                    printer gen,
+                        pop,
+                        stats.mean, stats.stdDev
                 }
+            }
         }
         println characters.closeTable
     }
@@ -120,21 +134,23 @@ class ToTable {
         String h = "ea"
         generations.each{ int gen ->
             epochs.each{ int e ->
-                if (e) {
-                    if (gen)
-                        foldNos.each { int fold ->
-                            populations.each { int pop ->
-                                crossRates.each { cp ->
-                                    Results results = Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
-                                    printer e,
-                                        gen,
-                                        pop,
-                                        cp,
-                                        results?.f ?: "N/A"
-                                }
+                if (e*gen) {
+                    populations.each { int pop ->
+                        crossRates.each { cp ->
+                            def res = []
+                            foldNos.each { int fold ->
+                                res << Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
                             }
-
+                            def stats = getStats(res.findAll().collect { it.f } as double[])
+                            printer e,
+                                gen,
+                                pop,
+                                cp,
+                                stats.mean, stats.stdDev
                         }
+
+
+                    }
                 }
             }
         }
@@ -149,19 +165,21 @@ class ToTable {
         double cp = 0
         generations.each{ int gen ->
             epochs.each{ int e ->
-                if (e) {
-                    if (gen)
+                if (e*gen) {
+                    populations.each { int pop ->
+                        def res = []
                         foldNos.each { int fold ->
-                            populations.each { int pop ->
-                                Results results = Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
-                                printer e,
-                                    gen,
-                                    pop,
-                                    results?.f ?: "N/A"
-                            }
-
+                            res << Results.retrieve(collection, getKey(fold, e, gen, pop, h, cp))
 
                         }
+                        def stats = getStats(res.findAll().collect { it.f } as double[])
+                        printer e,
+                            gen,
+                            pop,
+                            stats.mean, stats.stdDev
+
+
+                    }
                 }
             }
         }
