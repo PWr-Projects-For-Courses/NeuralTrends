@@ -216,7 +216,7 @@ Eksperymenty wykonano dla każdej kombinacji wykorzystywanych parametrów.
 		\hline
 		Rozmiar populacji & $[100, 200, 500]$ &  Ilość rozwiązań przetwarzanych przez heurystykę w ramach jednej iteracji. Zarówno PSO jak i EA są heurystykami populacyjnymi, więc mimo różnego nazewnictwa, obie są parametryzowane tą wartością. Jeśli liczba iteracji wynosiła 0, to ten parametr nie był używany. \\
 		\hline
-		Prawdopodobieństwo krzyżowania & $[0.5, 0.75, 0.9]$	& Parametr używany jedynie w sytuacji, w której korzystaliśmy z algorytmu ewolucyjnego. Określa prawdopodobieństwo tego, że losowy osobnik z populacji weźmie udział w operacji krzyżowania. \\
+		Prawdopodobieństwo krzyżowania & $[0,5, 0,75, 0,9]$	& Parametr używany jedynie w sytuacji, w której korzystaliśmy z algorytmu ewolucyjnego. Określa prawdopodobieństwo tego, że losowy osobnik z populacji weźmie udział w operacji krzyżowania. \\
 		\hline
 	\end{tabularx}
 \end{table}
@@ -273,6 +273,7 @@ Porównanie metod:
 \end{table}
 
 \begin{figure}[H]
+	\caption{e(method)}
 	\input{gnuplot/methods.tex}
 \end{figure}
 
@@ -281,10 +282,77 @@ Najważniejsze
 \subsection{BP}
 
 \begin{figure}[H]
+	\caption{e(epochs)}
 	\input{gnuplot/bp_epochs.tex}
 \end{figure}
 
+\subsection{EA}
 
+\begin{figure}[H]
+	\caption{e(generations)}
+	\input{gnuplot/ea_generations.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(population)}
+	\input{gnuplot/ea_population.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(cp)}
+	\input{gnuplot/ea_cp.tex}
+\end{figure}
+
+\subsection{PSO}
+
+\begin{figure}[H]
+	\caption{e(generations)}
+	\input{gnuplot/pso_generations.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(population)}
+	\input{gnuplot/pso_population.tex}
+\end{figure}
+
+\subsection{BP+EA}
+
+\begin{figure}[H]
+	\caption{e(generations)}
+	\input{gnuplot/bp_ea_epochs.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(generations)}
+	\input{gnuplot/bp_ea_generations.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(population)}
+	\input{gnuplot/bp_ea_population.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(cp)}
+	\input{gnuplot/bp_ea_cp.tex}
+\end{figure}
+
+\subsection{BP+PSO}
+
+\begin{figure}[H]
+	\caption{e(epochs)}
+	\input{gnuplot/bp_pso_epochs.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(generations)}
+	\input{gnuplot/bp_pso_generations.tex}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{e(population)}
+	\input{gnuplot/bp_pso_population.tex}
+\end{figure}
 
 \chapter{Podsumowanie}
 
