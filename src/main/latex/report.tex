@@ -247,7 +247,7 @@ Funkcją oceny używaną w heurystykach optymalizacyjnych był błąd średniokw
 
 Porównanie metod:
 
-\begin{table}
+\begin{table}[H]
 	\caption{name me}
 	\centering 
 	\begin{longtable}{|l|r@{$\pm$}r|}
@@ -272,11 +272,45 @@ Porównanie metod:
 	\end{longtable}
 \end{table}
 
-\begin{figure}
+\begin{figure}[H]
 	\input{gnuplot/methods.tex}
 \end{figure}
 
 Najważniejsze
+
+\subsection{BP}
+
+\begin{figure}[H]
+	\input{gnuplot/bp_epochs.tex}
+\end{figure}
+
+
+
+\chapter{Podsumowanie}
+
+Wnioski - jest chujnia dla floatów
+
+Uwagi:
+
+liczby wyrównać do prawejw tabelach
+
+część tabel się nie mieści, jak np tabela 4.7, są niepotrzebnie szerokie kolumny rozpychane przez nagłówek
+
+proponuję rozbić nagłówek na dwa nierozdzielone wiersze, tak, żeby to było:
+
+Prawd.
+
+krzyżowania
+
+z tym powinno się zmieścić
+
+Na wykresach słupkowych zapisać wartości nad słupkami, nie widać które jest wyższe zbyt dobrze
+
+\bibliographystyle{plain}
+\bibliography{bibliografia}
+
+\appendix 
+\chapter{Pełne wyniki badań}
 
 \subsection{BP}
 
@@ -473,33 +507,6 @@ Najważniejsze
 		3000 & 500 & 500 & 0,0684 & 0,0027\\ \hline
 	\end{longtable}
 \end{center}
-
-\chapter{Podsumowanie}
-
-Wnioski - jest chujnia dla floatów
-
-Uwagi:
-
-liczby wyrównać do prawejw tabelach
-
-część tabel się nie mieści, jak np tabela 4.7, są niepotrzebnie szerokie kolumny rozpychane przez nagłówek
-
-proponuję rozbić nagłówek na dwa nierozdzielone wiersze, tak, żeby to było:
-
-Prawd.
-
-krzyżowania
-
-z tym powinno się zmieścić
-
-Na wykresach słupkowych zapisać wartości nad słupkami, nie widać które jest wyższe zbyt dobrze
-
-\bibliographystyle{plain}
-\bibliography{bibliografia}
-
-\appendix 
-\chapter{Pełne wyniki badań}
-
 
 uber tabele
 

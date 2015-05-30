@@ -3,7 +3,8 @@ set terminal latex
 set output "methods.tex"
 #set output "methods.png"
 set key off
-set yrange [0:0.35]
+set yrange [0:0.4]
 set boxwidth 0.5
 set style fill solid
-plot "method.dat" using 1:3:xtic(2) with boxes
+plot "./data/methods.dat" using 1:3:xtic(2) with boxes,\
+    "./data/methods.dat" using 1:($3+0.02):3 with labels
