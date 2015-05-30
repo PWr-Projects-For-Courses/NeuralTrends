@@ -1,7 +1,5 @@
 set terminal latex
-#set terminal pngcairo size 800,600 dashed enhanced font 'Verdana,10'
 set output "ea_generations.tex"
-#set output "ea_generations.png"
 set key off
 set xrange [0:600]
 set yrange [0.3:0.33]
