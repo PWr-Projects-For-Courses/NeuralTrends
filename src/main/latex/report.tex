@@ -265,7 +265,7 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 
 
 \begin{table}[H]
-	\caption{Porównanie efektywności różnych metod uczenia \label{table:compare}}
+	\caption{Porównanie efektywności różnych metod uczenia \label{table:compare}. Dla każdej metody przedstawiono 3 najlepsze wyniki uzyskane podczas przeprowadzania badań.}
 	\centering 
 	\begin{longtable}{|l|r@{$\pm$}r|}
 		\hline
@@ -289,6 +289,14 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 	\end{longtable}
 \end{table}
 
+W tabeli \ref{table:compare} zaprezentowano po 3 najlepsze wyniki uzyskane dla każdej z badanych metod podczas wykonywania wszystkich badań, niezależnie od wartości parametrów. Najlepsze z tych wyników przedstawiono także na wykresie znajdującym się na rysunku \ref{figure:compare}.
+
+Jak można zaobserwować, podejścia wykorzystujące jedynie heurystyki bez wcześniejszej nauki za pomocą propagacji wstecznej uzyskały wyniki dużo gorsze od pozostałych rozwiązań. Wykorzystanie heurystyk do dalszej nauki sieci wstępnie nauczonej za pomocą propagacji spowodowało nieznaczne pogorszenie uzyskanych wyników.
+
+Spośród zbadanych heurystyk algorytm optymalizacji z pomocą roju cząsteczek pozwolił uzyskać wyniki odrobinę lepsze niż te uzyskane podczas stosowania algorytmu ewolucyjnego. Wiąże się to jednak z dużo większym czasem nauki. 
+
+Zmierzone czasy nauki za pomocą badanych metod nie są niestety miarodajne ze względu na wykonywanie badań na dwóch różnych maszynach o różnej mocy obliczeniowej, dlatego też nie zostały one w tej pracy zamieszczone. Można je jednak wykorzystać do oszacowania jak czasochłonna jest nauka. Propagacja wsteczna wykonywała się w ciągu kilku sekund, algorytm genetyczny potrzebował kilkunastu minut by zakończyć obliczenia, a PSO aż kilkunastu godzin.
+
 \begin{figure}[H]
 	\caption{Wykres efektywności różnych metod uczenia \label{figure:compare}}
 	\input{gnuplot/methods.tex}
@@ -301,12 +309,20 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 	\input{gnuplot/bp_epochs.tex}
 \end{figure}
 
+Na rysunku \ref{figure:bp_epochs} przedstawiono wykres błędu popełnianego przez autokoder nauczony z pomocą propagacji wstecznej w zależności od liczby epok uczenia. Można zauważyć, że błąd maleje wraz ze wzrostem liczby epok do pewnego momentu, a później rośnie. Można podejrzewać, że wiąże się to z kwestią przeuczenia (\textit{ang. overfitting}) sieci -- błąd na danych treningowych wciąż maleje, jednak sieć staje się zanadto dopasowana do tych danych i wykorzystanie osobnego zbioru danych testowych powoduje uzyskanie wyższego błędu.
+
 \subsection{Algorytm ewolucyjny}
 
 \begin{figure}[H]
 	\caption{Wykres efektywności uczenia EA w zależności od liczby pokoleń \label{figure:ea_generations}}
 	\input{gnuplot/ea_generations.tex}
 \end{figure}
+
+Na rysunku \ref{figure:ea_generations} przedstawiono wykres błędu uzyskanego przez sieć nauczona za pomocą algorytmu genetycznego w zależności od liczby pokoleń zastosowanej w tym algorytmie. Można zauważyć, że z początku błąd ten rośnie, co wiąże się ze stochastyczną naturą zastosowanego podejścia, ale ostatecznie w miarę zwiększania liczby pokoleń błąd stopniowo maleje. 
+
+Wykres \ref{figure:ea_population} przedstawia zależność błędu od rozmiaru populacji. Z początku błąd ten maleje, ale od pewnego momentu zaczyna rosnąć. Wiąże się to najprawdopodobniej z szerokim zakresem możliwych wartości, jakie mogą przyjmować kolejne wagi optymalizowane z pomocą tego algorytmu. Duży rozmiar populacji powoduje utworzenie wielu złych rozwiązań, które następnie w wyniku krzyżowania pogarszają ostateczny wynik.
+
+Na wykresie \ref{figure:ea_cp} zaprezentowano zależność błędu od użytego prawdopodobieństwa krzyżowania. Najlepszy wynik został osiągnięty dla najniższego prawdopodobieństwa spośród badanych. To także najprawdopodobniej wiąże się z zastosowaniem szerokiego zakresu możliwych wartości wag.
 
 \begin{figure}[H]
 	\caption{Wykres efektywności uczenia EA w zależności od rozmiaru populacji \label{figure:ea_population}}
@@ -320,6 +336,8 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 
 \subsection{Algorytm rojowy}
 
+Na wykresach \ref{figure:pso_generations} oraz \ref{figure:pso_population} przedstawiono błąd popełniany przez sieć nauczoną z pomocą algorytmu PSO w zależności od liczby iteracji oraz liczby cząsteczek. W miarę zwiększania liczby iteracji wynik się coraz bardziej poprawiał, jednak wiązało się to ze znacznym wydłużeniem czasu nauki -- nawet do kilkunastu godzin. Analogicznie, zwiększanie rozmiaru populacji powoduje spadek błędu.
+
 \begin{figure}[H]
 	\caption{Wykres efektywności uczenia PSO w zależności od liczby iteracji \label{figure:pso_generations}}
 	\input{gnuplot/pso_generations.tex}
@@ -331,6 +349,12 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 \end{figure}
 
 \subsection{Propagacja wsteczna + Algorytm ewolucyjny}
+
+Na wykresach \ref{figure:bp_ea_epochs} - \ref{figure:bp_ea_cp} przedstawiono błąd popełniany przez sieć uczoną z pomocą podejścia mieszanego wykorzystującego propagację wsteczną oraz algorytm ewolucyjny w zależności od parametrów tych metod. Obserwacje dotyczące liczby epok pozostają takie same jak w przypadku czystej propagacji wstecznej. 
+
+Zwiększanie liczby pokoleń algorytmu genetycznego powoduje ostateczną poprawę uzyskanego wyniku. W przeciwieństwie jednak do czystego algorytmu ewolucyjnego zwiększanie rozmiaru populacji w podejściu mieszanym powoduje spadek błędu. Wiąże się to z tym, iż populacja początkowa budowana jest na podstawie prototypu uzyskanego dzięki propagacji wstecznej przez co zakres możliwych wag się znacznie zmniejsza. 
+
+Wyższe wartości prawdopodobieństwa krzyżowania powodują poprawę wyników do pewnego momentu, za wysokie jednak powodują zwiększenie błędu. Wiąże się to z tym, iż przy prawdopodobieństwie rzędu 90\% krzyżowanie jest niemalże pewne i powoduje nadmierne wymieszanie osobników.
 
 \begin{figure}[H]
 	\caption{Wykres efektywności uczenia BP+EA w zależności od liczby epok \label{figure:bp_ea_epochs}}
@@ -354,6 +378,14 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 
 \subsection{Propagacja wsteczna + Algorytm rojowy}
 
+Wykresy \ref{figure:bp_pso_epochs} - \ref{figure:bp_pso_population} przedstawiają wyniki uzyskane przez sieć nauczoną za pomocą podejścia mieszanego wykorzystującego propagację wsteczną oraz algorytm PSO w zależności od parametrów obu tych rozwiązań częściowych. 
+
+W miarę zwiększania liczby epok propagacji wstecznej błąd maleje. Nie można już tutaj zaobserwować zjawiska przeuczenia. Wiąże się to najprawdopodobniej z tym, iż zastosowany algorytm rojowy pogarszał odrobinę wyniki uzyskane przez propagację wsteczną, eliminując tym samym efekt przeuczenia.
+
+W miarę wzrostu liczby iteracji algorytmu rojowego błąd się zwiększa. Jest to prawdopodobnie efektem tego, iż dzięki zastosowaniu propagacji wstecznej heurystyka rozpoczyna przeszukiwanie przestrzeni od rozwiązań bliskich do optymalnego. Dalsze losowe przeszukiwanie przestrzeni powoduje tylko pogorszenie uzyskanych wyników. 
+
+Wyniki pozostają na zbliżonym poziomie niezależnie od rozmiaru populacji. Nagły wzrost błędu dla populacji o rozmiarze 200 można uzasadnić stochastyczną naturą podejścia heurystycznego.
+
 \begin{figure}[H]
 	\caption{Wykres efektywności uczenia BP+PSO w zależności od liczby epok \label{figure:bp_pso_epochs}}
 	\input{gnuplot/bp_pso_epochs.tex}
@@ -365,7 +397,7 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 \end{figure}
 
 \begin{figure}[H]
-	\caption{Wykres efektywności uczenia BP+PSO w zależności od liczby cząsteczk \label{figure:bp_pso_population}}
+	\caption{Wykres efektywności uczenia BP+PSO w zależności od liczby cząsteczek \label{figure:bp_pso_population}}
 	\input{gnuplot/bp_pso_population.tex}
 \end{figure}
 
