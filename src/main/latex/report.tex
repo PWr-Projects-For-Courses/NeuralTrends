@@ -49,7 +49,7 @@ Praca ta opisuje wykorzystanie technik heurystycznej optymalizacji do nauki dete
 
 Niniejszy raport jest podsumowaniem projektu realizowanego w ramach kursu ,,Nowe trendy w obliczeniach neuronowych'' którego temat brzmiał ,,Techniki heurystycznego uczenia warstw ukrytych w sieci głębokiej''. Od czytelnika oczekuje się podstawowej znajomości dziedziny sieci neuronowych i obliczeń miękkich. Bardziej szczegółowy opis zastosowanych technik znajduje się w rozdziale \ref{chap:introduction}.
 
-Pierwotnym celem projektu było zbadanie alternatywnego podejścia do uczenia sieci głębokich. Miało ono polegać na zbudowaniu stosu autokoderów (opisanych w sekcji \ref{sec:autoencoders}), uczonych w dwóch krokach. Pierwszym z nich miała być zastosowanie popularnej metody propagacji wstecznej. Niestandardową częścią uczenia był krok drugi, polegający na wykorzystaniu heurystyk optymalizacyjnych (konkretnie algorytmów ewolucyjnych i rojowych) w celu poprawienia jakości działania wstępnie wyuczonej sieci.
+Pierwotnym celem projektu było zbadanie alternatywnego podejścia do uczenia sieci głębokich. Miało ono polegać na zbudowaniu stosu autokoderów (opisanych w sekcji \ref{sec:autoencoders}), uczonych w dwóch krokach. Pierwszym z nich miało być zastosowanie popularnej metody propagacji wstecznej. Niestandardową częścią uczenia był krok drugi, polegający na wykorzystaniu heurystyk optymalizacyjnych (konkretnie algorytmów ewolucyjnych i rojowych) w celu poprawienia jakości działania wstępnie wyuczonej sieci.
 
 Zamierzenia tego nie udało się zrealizować, czego powody zostały opisane w rozdziale \ref{chapter:david-bowie}. Aby w ramach tego projektu odkryć nową wiedzę nt. sieci neuronowych i ich uczenia, zdecydowano się na zmianę tematu.
 
@@ -104,7 +104,7 @@ Każda cząsteczka modelowana jest jako 3 wektory D-wymiarowe, gdzie D jest licz
 \item $\vec{v}_{i}$ - prędkość.
 \end{itemize}
 
-Obecna pozycja $\vec{x}_{i}$ może być rozumiana jako współrzędne reprezentujące pozycję w przestrzeni. W każdej iteracji algorytmu obecna pozycja jest ewaluowana jako możliwe rozwiązanie problemu. Jeśli ta pozycja okaże się lepsza od wszystkich znalezionych wcześniej, to jej koordynaty zapisywane są w wektorze $\vec{p}_{i}$, a wartość funkcji celu w zmiennej $pbest_{i}$. Celem jest odszukiwanie coraz lepszych pozycji i aktualizowanie $\vec{p}_{i}$ oraz $pbest_{i}$. Nowa pozycja obliczana jest poprzez dodanie wektora prędkości $\vec{v}_{i}$ do pozycji $\vec{x}_{i}$ i algorytm działa poprzez modyfikację $\vec{v}_{i}$.
+Obecna pozycja $\vec{x}_{i}$ może być rozumiana jako współrzędne reprezentujące pozycję w przestrzeni. W każdej iteracji algorytmu obecna pozycja jest ewaluowana jako możliwe rozwiązanie problemu. Jeśli ta pozycja okaże się lepsza od wszystkich znalezionych wcześniej, to jej koordynaty zapisywane są w wektorze $\vec{p}_{i}$, a wartość funkcji celu w zmiennej $p^{best}_{i}$. Celem jest odszukiwanie coraz lepszych pozycji i aktualizowanie $\vec{p}_{i}$ oraz $p^{best}_{i}$. Nowa pozycja obliczana jest poprzez dodanie wektora prędkości $\vec{v}_{i}$ do pozycji $\vec{x}_{i}$, co jest kluczową częścią heurystyki.
 
 Rój cząsteczek stanowi coś więcej niż tylko kolekcję pojedynczych cząsteczek. Pojedynczy byt nie posiada niemalże żadnych możliwości rozwiązania zadanego problemu, rozwój odbywa się poprzez interakcję cząsteczek. Byty ułożone są według pewnej topologii komunikacji w sąsiedztwa \cite{kennedy2010particle}. Najprostszym wariantem jest sąsiedztwo globalne, w którym wszystkie cząsteczki mogą się ze sobą komunikować. 
 
@@ -318,7 +318,7 @@ Na rysunku \ref{figure:bp_epochs} przedstawiono wykres błędu popełnianego prz
 	\input{gnuplot/ea_generations.tex}
 \end{figure}
 
-Na rysunku \ref{figure:ea_generations} przedstawiono wykres błędu uzyskanego przez sieć nauczona za pomocą algorytmu genetycznego w zależności od liczby pokoleń zastosowanej w tym algorytmie. Można zauważyć, że z początku błąd ten rośnie, co wiąże się ze stochastyczną naturą zastosowanego podejścia, ale ostatecznie w miarę zwiększania liczby pokoleń błąd stopniowo maleje. 
+Na rysunku \ref{figure:ea_generations} przedstawiono wykres błędu uzyskanego przez sieć nauczoną za pomocą algorytmu genetycznego w zależności od liczby pokoleń zastosowanej w tym algorytmie. Można zauważyć, że z początku błąd ten rośnie, co wiąże się ze stochastyczną naturą zastosowanego podejścia, ale ostatecznie w miarę zwiększania liczby pokoleń błąd stopniowo maleje. 
 
 Wykres \ref{figure:ea_population} przedstawia zależność błędu od rozmiaru populacji. Z początku błąd ten maleje, ale od pewnego momentu zaczyna rosnąć. Wiąże się to najprawdopodobniej z szerokim zakresem możliwych wartości, jakie mogą przyjmować kolejne wagi optymalizowane z pomocą tego algorytmu. Duży rozmiar populacji powoduje utworzenie wielu złych rozwiązań, które następnie w wyniku krzyżowania pogarszają ostateczny wynik.
 
