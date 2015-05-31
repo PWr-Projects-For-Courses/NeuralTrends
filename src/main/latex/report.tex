@@ -245,10 +245,25 @@ Funkcją oceny używaną w heurystykach optymalizacyjnych był błąd średniokw
 
 \section{Wyniki}
 
-Porównanie metod:
+W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się przy pomocy ich angielskich akronimów. Są one przedstawione w tabeli \ref{table:acronyms}.
 
 \begin{table}[H]
-	\caption{name me}
+	\caption{Oznaczenia metod uczenia używanego w raporcie \label{table:acronyms}}
+	\begin{tabularx}{\linewidth}{|c|X|X|}
+		\hline
+		Akronim & Nazwa angielska & Nazwa polska \\
+		\hline \hline
+		BP & Backpropagation & Propagacja wsteczna \\ \hline
+		EA & Evolutionary Algorithm & Algorytm ewolucyjny \\ \hline
+		PSO & Particle Swarm Optimization & Algorytm rojowy \\ \hline
+		BP+EA & Backpropagation with Evolutionary Algorithm & Propagacja wsteczna z algorytmem ewolucyjnym \\ \hline
+		BP+PSO & Backpropagation with Particle Swarm Optimization & Propagacja wsteczna z algorytmem rojowym \\ \hline
+	\end{tabularx}
+\end{table}
+
+
+\begin{table}[H]
+	\caption{Porównanie efektywności różnych metod uczenia \label{table:compare}}
 	\centering 
 	\begin{longtable}{|l|r@{$\pm$}r|}
 		\hline
@@ -273,84 +288,85 @@ Porównanie metod:
 \end{table}
 
 \begin{figure}[H]
-	\caption{e(method)}
+	\caption{Wykres efektywności różnych metod uczenia \label{figure:compare}}
 	\input{gnuplot/methods.tex}
 \end{figure}
 
 Najważniejsze
 
-\subsection{BP}
+\subsection{Propagacja wsteczna}
 
 \begin{figure}[H]
-	\caption{e(epochs)}
+	\caption{Wykres efektywności uczenia BP w zależności od liczby epok \label{figure:bp_epochs}}
 	\input{gnuplot/bp_epochs.tex}
 \end{figure}
 
-\subsection{EA}
+\subsection{Algorytm ewolucyjny}
 
 \begin{figure}[H]
+	\caption{Wykres efektywności uczenia EA w zależności od liczby pokoleń \label{figure:ea_generations}}
 	\caption{e(generations)}
 	\input{gnuplot/ea_generations.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(population)}
+	\caption{Wykres efektywności uczenia EA w zależności od rozmiaru populacji \label{figure:ea_population}}
 	\input{gnuplot/ea_population.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(cp)}
+	\caption{Wykres efektywności uczenia EA w zależności od prawd. krzyżowania \label{figure:ea_cp}}
 	\input{gnuplot/ea_cp.tex}
 \end{figure}
 
-\subsection{PSO}
+\subsection{Algorytm rojowy}
 
 \begin{figure}[H]
-	\caption{e(generations)}
+	\caption{Wykres efektywności uczenia PSO w zależności od liczby iteracji \label{figure:pso_generations}}
 	\input{gnuplot/pso_generations.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(population)}
+	\caption{Wykres efektywności uczenia PSO w zależności od liczby cząsteczek \label{figure:pso_population}}
 	\input{gnuplot/pso_population.tex}
 \end{figure}
 
-\subsection{BP+EA}
+\subsection{Propagacja wsteczna + Algorytm ewolucyjny}
 
 \begin{figure}[H]
-	\caption{e(epochs)}
+	\caption{Wykres efektywności uczenia BP+EA w zależności od liczby epok \label{figure:bp_ea_epochs}}
 	\input{gnuplot/bp_ea_epochs.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(generations)}
+	\caption{Wykres efektywności uczenia BP+EA w zależności od liczby pokoleń \label{figure:bp_ea_generations}}
 	\input{gnuplot/bp_ea_generations.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(population)}
+	\caption{Wykres efektywności uczenia BP+EA w zależności od rozmiaru populacji \label{figure:bp_ea_population}}
 	\input{gnuplot/bp_ea_population.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(cp)}
+	\caption{Wykres efektywności uczenia BP+EA w zależności od prawd. krzyżowania \label{figure:bp_ea_cp}}
 	\input{gnuplot/bp_ea_cp.tex}
 \end{figure}
 
-\subsection{BP+PSO}
+\subsection{Propagacja wsteczna + Algorytm rojowy}
 
 \begin{figure}[H]
-	\caption{e(epochs)}
+	\caption{Wykres efektywności uczenia BP+PSO w zależności od liczby epok \label{figure:bp_pso_epochs}}
 	\input{gnuplot/bp_pso_epochs.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(generations)}
+	\caption{Wykres efektywności uczenia BP+PSO w zależności od liczby iteracji \label{figure:bp_pso_generations}}
 	\input{gnuplot/bp_pso_generations.tex}
 \end{figure}
 
 \begin{figure}[H]
-	\caption{e(population)}
+	\caption{Wykres efektywności uczenia BP+PSO w zależności od liczby cząsteczk \label{figure:bp_pso_population}}
 	\input{gnuplot/bp_pso_population.tex}
 \end{figure}
 
@@ -362,17 +378,6 @@ Uwagi:
 
 liczby wyrównać do prawejw tabelach
 
-część tabel się nie mieści, jak np tabela 4.7, są niepotrzebnie szerokie kolumny rozpychane przez nagłówek
-
-proponuję rozbić nagłówek na dwa nierozdzielone wiersze, tak, żeby to było:
-
-Prawd.
-
-krzyżowania
-
-z tym powinno się zmieścić
-
-Na wykresach słupkowych zapisać wartości nad słupkami, nie widać które jest wyższe zbyt dobrze
 
 \bibliographystyle{plain}
 \bibliography{bibliografia}
@@ -380,24 +385,22 @@ Na wykresach słupkowych zapisać wartości nad słupkami, nie widać które jes
 \appendix 
 \chapter{Pełne wyniki badań}
 
-\subsection{BP}
+\section{Propagacja wsteczna}
 
 \begin{center}
-	\begin{longtable}{|l|r@{$\pm$}r|}
-		\caption{name me}\\
+	\begin{longtable}{|r|r@{$\pm$}r|}
 		\hline
-		Liczba epok & \multicolumn{2}{|c|}{Ocena}\\ \hline \hline\endhead
+		\multicolumn{1}{|c|}{Liczba epok} & \multicolumn{2}{|c|}{Ocena}\\ \hline \hline\endhead
 		1000 & 0,0235 & 0,0019 \\ \hline
 		2000 & 0,0228 & 0,0011\\ \hline
 		3000 & 0,0235 & 0,0007\\ \hline
 	\end{longtable}
 \end{center}
 
-\subsection{EA}
+\section{Algorytm ewolucyjny}
 
 \begin{center}
 	\begin{longtable}{|l|l|l|r@{$\pm$}r|}
-		\caption{name me}\\
 		\hline
 		Liczba & Rozmiar & Prawd. & \multicolumn{2}{|c|}{Ocena}\\
 		pokoleń & populacji & krzyżowania & \multicolumn{2}{|c|}{}\\ \hline \hline\endhead
@@ -431,11 +434,10 @@ Na wykresach słupkowych zapisać wartości nad słupkami, nie widać które jes
 	\end{longtable}
 \end{center}
 
-\subsection{PSO}
+\section{Algorytm rojowy}
 
 \begin{center}
 	\begin{longtable}{|l|l|r@{$\pm$}r|}
-		\caption{name me}\\
 		\hline
 		Liczba iteracji & Liczba cząsteczek & \multicolumn{2}{|c|}{Ocena}\\ \hline \hline\endhead
 		100 & 100 & 0,3368 & 0,0230\\ \hline
@@ -450,11 +452,10 @@ Na wykresach słupkowych zapisać wartości nad słupkami, nie widać które jes
 	\end{longtable}
 \end{center}
 
-\subsection{BP+EA}
+\section{Propagacja wsteczna + Algorytm ewolucyjny}
 
 \begin{center} 
 	\begin{longtable}{|l|l|l|l|r@{$\pm$}r|}
-		\caption{name me}\\
 		\hline
 		Liczba & Liczba & Rozmiar & Prawd. & \multicolumn{2}{|c|}{Ocena} \\
 		epok & pokoleń & populacji & krzyżowania & \multicolumn{2}{|c|}{}\\ \hline \hline\endhead
@@ -542,10 +543,9 @@ Na wykresach słupkowych zapisać wartości nad słupkami, nie widać które jes
 	\end{longtable}
 \end{center}
 
-\subsection{BP+PSO}
+\section{Propagacja wsteczna + Algorytm rojowy}
 \begin{center}
 	\begin{longtable}{|l|l|l|r@{$\pm$}r|}
-		\caption{name me}\\
 		\hline
 		Liczba epok & Liczba iteracji & Liczba cząsteczek & \multicolumn{2}{|c|}{Ocena}\\ \hline \hline\endhead
 		1000 & 100 & 100 & 0,0276 & 0,0081\\ \hline
