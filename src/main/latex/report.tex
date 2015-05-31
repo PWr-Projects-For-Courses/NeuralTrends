@@ -188,15 +188,17 @@ W pierwszej kolejności autokoder jest uczony za pomocą algorytmu propagacji ws
 
 \chapter{Badania}
 
-\section{Protokół badawczy}
+W rozdziale tym przedstawiono opis przeprowadzonych badań. W pierwszej jego części opisano cel wykonanych badań oraz podział zbioru testowego w celu wykonania walidacji krzyżowej. Następnie przedstawiono plan badań, tj. zakresy zbadanych parametrów. Następnie opisana została realizacja technik uczenia, tj. parametry propagacji wstecznej i elementy heurystyk które należało zdefiniować. W ostatniej części rozdziału przedstawiono uzyskane wyniki badań.
 
-W rozdziale tym przedstawiono opis przeprowadzonych badań. W pierwszej jego części opisano podział zbioru testowego w celu kroswalidacji. Następnie przedstawiono plan badań, tj. zakresy zbadanych parametrów. Następnie opisana została realizacja technik uczenia, tj. parametry propagacji wstecznej i elementy heurystyk które należało zdefiniować. W ostatniej części rozdziału przedstawiono uzyskane wyniki badań.
+\section{Cel badań}
 
-\subsection{Zbiór danych i walidacja krzyżowa}
+Nie jest możliwa analityczna weryfikacja skuteczności zaproponowanych metod uczenia. W związku z tym przeprowadzono badania mające na celu porównanie heurystycznych metod nauki autokoderów z ugruntowanym podejściem opartym o propagację wsteczną.
+
+\section{Zbiór danych i walidacja krzyżowa}
 
 Zbiór danych został pobrany z repozytorium danych KEEL \cite{alcala2010keel}. Poza zbiorem w czystej postaci udostępniono go tam także wstępnie podzielonego na 5 par zbiorów uczących i testowych, przygotowanych do wykorzystania podczas przeprowadzania procedury walidacji krzyżowej.
 
-\subsection{Zbadane parametry}
+\section{Zbadane parametry}
 
 W tabeli \ref{table:params} zostały przedstawione zakresy badanych parametrów.
 
@@ -223,7 +225,7 @@ Eksperymenty wykonano dla każdej kombinacji wykorzystywanych parametrów.
 
 \footnotetext[1]{Naukę propagacją wsteczną prowadzono paczkami po 50 instancji uczących, co dla zbioru uczącego dawało 10 paczek. Wartość tego parametru to liczba epok wykonana dla wszystkich paczek. Innymi słowy, przy użyciu każdej z nich wykonywano \nicefrac{1}{10} wszystkich epok. }
 
-\subsection{Realizacja technik uczenia}
+\section{Realizacja technik uczenia}
 
 Przy korzystaniu z propagacji wstecznej korzystano z regularyzacji L2 \cite{girosi1995regularization} ze współczynnikiem 0.1. Miało to na celu wymuszenie kodowania rzadkiego w autokoderze \cite{ngiam2011optimization}.
 
@@ -292,8 +294,6 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 	\input{gnuplot/methods.tex}
 \end{figure}
 
-Najważniejsze
-
 \subsection{Propagacja wsteczna}
 
 \begin{figure}[H]
@@ -305,7 +305,6 @@ Najważniejsze
 
 \begin{figure}[H]
 	\caption{Wykres efektywności uczenia EA w zależności od liczby pokoleń \label{figure:ea_generations}}
-	\caption{e(generations)}
 	\input{gnuplot/ea_generations.tex}
 \end{figure}
 
