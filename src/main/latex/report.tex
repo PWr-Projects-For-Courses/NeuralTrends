@@ -371,12 +371,26 @@ W dalszej części raportu do konkretnych metod uczenia będziemy odnosić się 
 
 \chapter{Podsumowanie}
 
-Wnioski - jest chujnia dla floatów
+Ostateczny cel projektu, tj. porównanie skuteczności wybranych metod uczenia został zrealizowany.
 
-Uwagi:
+Najlepsze wyniki uzyskano przy użyciu standardowej propagacji wstecznej z wykorzystaniem regularyzacji L2. 
+Próba poprawy skuteczności autokodera przy pomocy metod heurystycznych w ogólności pogarszała wyniki. 
 
-liczby wyrównać do prawejw tabelach
+Uczenie przy pomocy samego algorytmu ewolucyjnego dawało mało satysfakcjonującą jakość rekonstrukcji, z błędem większym (w porównaniu do klasycznego podejścia) o rząd wartości. 
+Użycie algorytmu rojowego bez propagacji dawało wyniki porównywalne do algorytmu ewolucyjnego, jednak wraz ze wzrostem liczby literacji ocena rozwiązania była coraz lepsza. 
 
+Duży błąd rekonstrukcji przy użyciu metod heurystycznych może wynikać z bardzo dużej przestrzeni rozwiązań. 
+Osobniki lub cząsteczki były reprezentowane jako wektory wag, z których każda mogła być dowolną liczbą rzeczywistą.
+Jeśli przeszukiwanie przestrzeni rozpoczynaliśmy od rozwiązań znalezionych przez metodę propagacji wstecznej, to heurystyka szybko pogarszała wyniki.
+
+Problemem okazał się również długi czas uczenia - sama propagacja wsteczna trwała sekundy, algorytm ewolucyjny - minuty, a rojowy - godziny. 
+Być może po o wiele większej ilości iteracji algorytm rojowy zaczynający od losowych rozwiązań dorównałby standardowej propagacji wstecznej, jednak różnice w długości trwania sprawiają, że nie nadaje się on do rzeczywistych zastosowań.
+
+Można zauważyć, że najlepsze wyniki (poza przypadkiem BP+EA) osiągano dla 2000 epok propagacji wstecznej, a dla mniejszej lub większej ilości epok błąd rekonstrukcji nieznacznie rósł. 
+Może to wynikać z niedouczenia (dla mniejszej liczby epok) lub przeuczenia (dla większej liczby epok) sieci.
+
+W ramach projektu wykazano, że dla problemu rekonstrukcji danych o cechach ciągłych uczenie propagacją wsteczną daje znacząco lepsze wyniki niż metody heurystyczne. 
+Dalsze badania mogłyby zwalidować tą tezę dla danych o atrybutach dyskretnych i dla innych realizacji heurystyk, tj. innych reprezentacji osobników i cząsteczek i innych operatorów.
 
 \bibliographystyle{plain}
 \bibliography{bibliografia}
