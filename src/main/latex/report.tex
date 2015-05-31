@@ -39,8 +39,8 @@
 \maketitle
 
 \begin{abstract}
-Your abstract goes here...
-...
+Praca ta opisuje wykorzystanie technik heurystycznej optymalizacji do nauki deterministycznych autokoderów operujących na danych ciągłych. Przedstawiono tu powody niepowodzenia podczas zastosowania stosu autokoderów do problemu rozpoznawania oraz porównanie różnych metod nauki deterministycznych autokoderów w problemie redukcji wymiarowości danych ciągłych. Zbadano skuteczność nauki za pomocą propagacji wstecznej, heurystyk w postaci algorytmów genetycznych oraz algorytmów rojowych, a także podejścia mieszane wykorzystującego oba z wymienionych rozwiązań. Na podstawie wyników badań podejścia heurystyczne można uznać za mniej efektywne od algorytmu propagacji wstecznej dla rozważanego problemu.
+
 \end{abstract}
 
 \tableofcontents
@@ -208,15 +208,15 @@ Eksperymenty wykonano dla każdej kombinacji wykorzystywanych parametrów.
 	\caption{Zakresy badanych parametrów \label{table:params}}
 	\begin{tabularx}{\linewidth}{|X|c|X|}
 		\hline
-		\textbf{Parametr} & \textbf{Zakres wartości} & Znaczenie parametru\\
+		\textbf{Parametr} & \textbf{Zakres wartości} & \textbf{Znaczenie parametru}\\
 		\hline \hline
-		Liczba epok & $[0, 1000, 2000, 3000]$ & Łączna liczba epok propagacji wstecznej\footnotemark[1]. Jeśli wartość tego parametru wynosiła 0, to technika ta w ogóle nie była stosowana. \\
+		\textit{epochs} & $[0, 1000, 2000, 3000]$ & Łączna liczba epok propagacji wstecznej\footnotemark[1]. Jeśli wartość tego parametru wynosiła 0, to technika ta w ogóle nie była stosowana. \\
 		\hline
-		Liczba iteracji & $[0, 100, 200, 500]$ & Ilość pokoleń w algorytmie ewolucyjnym lub iteracji w algorytmie rojowym. Jeśli wartość tego parametru wynosiła 0, to heurystyka w ogóle nie była używana w procesie uczenia. \\
+		\textit{generations} & $[0, 100, 200, 500]$ & Ilość pokoleń w algorytmie ewolucyjnym lub iteracji w algorytmie rojowym. Jeśli wartość tego parametru wynosiła 0, to heurystyka w ogóle nie była używana w procesie uczenia. \\
 		\hline
-		Rozmiar populacji & $[100, 200, 500]$ &  Ilość rozwiązań przetwarzanych przez heurystykę w ramach jednej iteracji. Zarówno PSO jak i EA są heurystykami populacyjnymi, więc mimo różnego nazewnictwa, obie są parametryzowane tą wartością. Jeśli liczba iteracji wynosiła 0, to ten parametr nie był używany. \\
+		\textit{population} & $[100, 200, 500]$ &  Ilość rozwiązań przetwarzanych przez heurystykę w ramach jednej iteracji. Zarówno PSO jak i EA są heurystykami populacyjnymi, więc mimo różnego nazewnictwa, obie są parametryzowane tą wartością. Jeśli liczba iteracji wynosiła 0, to ten parametr nie był używany. \\
 		\hline
-		Prawdopodobieństwo krzyżowania & $[0,5, 0,75, 0,9]$	& Parametr używany jedynie w sytuacji, w której korzystaliśmy z algorytmu ewolucyjnego. Określa prawdopodobieństwo tego, że losowy osobnik z populacji weźmie udział w operacji krzyżowania. \\
+		\textit{cp} & $[0,5, 0,75, 0,9]$	& Parametr używany jedynie w sytuacji, w której korzystaliśmy z algorytmu ewolucyjnego. Określa prawdopodobieństwo tego, że losowy osobnik z populacji weźmie udział w operacji krzyżowania. \\
 		\hline
 	\end{tabularx}
 \end{table}
